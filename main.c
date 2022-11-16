@@ -34,10 +34,32 @@ typedef struct nodoT
 
 //!-----------------------------------FUNCIONES BASE----------------------------------------------------
 
-
-
+nodoT* crearNodoT(Termino dato)
+{
+    nodoT* nuevo=(nodoT*)malloc(sizeof(nodoT));
+    nuevo->idDOC=dato.idDOC;
+    nuevo->pos=dato.pos;
+    nuevo->sig=NULL;
+    return nuevo;
+}
 
 //!-----------------------------------FUNCIONES----------------------------------------------------
+
+void insertarNuevaOcurrencia(nodoT** lista,Termino dato)
+{
+    //primer criterio de orden ID, segundo POS
+
+    nodoT* nuevo=crearNodoT(dato);
+
+    if(*lista){
+
+        if((*lista)->idDOC > dato.idDOC){
+
+            nuevo->sig=(*lista);
+            (*lista)=nuevo;
+        }
+    }
+}
 
 void insertarTerminoExistente(nodoA** arbol,Termino dato)
 {
@@ -45,8 +67,7 @@ void insertarTerminoExistente(nodoA** arbol,Termino dato)
     *arbol->frecuencia+=1;
 
     //insercion en la lista
-    insertar
-
+    insertarNuevaOcurrencia(&(*arbol)->ocurrencias,dato);
 }
 
 void buscarDato(nodoA* arbol,int dato,nodoA** encontrado)

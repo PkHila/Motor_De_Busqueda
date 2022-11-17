@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 #define diccionario "diccionario.bin"
 
@@ -15,6 +16,14 @@ typedef struct{
 
 //!-----------------------------------ESTRUCTURA DEL ARBOL----------------------------------------------------
 
+typedef struct nodoT
+{
+    int idDOC;
+    int pos;
+    struct nodoT* sig;
+
+}nodoT;
+
 typedef struct nodoA
 {
    char palabra[20];
@@ -23,14 +32,6 @@ typedef struct nodoA
    struct nodoA* der;
    struct nodoA* izq;
 }nodoA;
-
-typedef struct nodoT
-{
-    int idDOC;
-    int pos;
-    struct nodoT* sig;
-
-}nodoT;
 
 //!-----------------------------------FUNCIONES BASE----------------------------------------------------
 
@@ -43,20 +44,63 @@ nodoT* crearNodoT(Termino dato)
     return nuevo;
 }
 
+nodoA* crearNodoA(Termino dato)
+{
+    nodoA* nuevo=(nodoA*)malloc(sizeof(nodoA));
+    strcpy(nuevo->palabra,dato.palabra);
+    nuevo->frecuencia=1;
+    nuevo->ocurrencias=crearNodoT(dato);
+    nuevo->izq=NULL;
+    nuevo->der=NULL;
+    return nuevo;
+}
+
 //!-----------------------------------FUNCIONES----------------------------------------------------
 
-void insertarNuevaOcurrencia(nodoT** lista,Termino dato)
+void insertarNuevoTermino(nodoA** arbol,Termino dato)
 {
-    //primer criterio de orden ID, segundo POS
+     if(*arbol)
+    {
+        if(strcmp(dato.palabra,(*arbol)->palabra)>0)
+        {
+            insertarNuevoTermino(&(*arbol)->der,dato);
+        }
+        else
+        {
+            insertarNuevoTermino(&(*arbol)->izq,dato);
+        }
+    }else{
 
+        (*arbol)=crearNodoA(dato);
+    }
+
+}
+
+void insertarNuevaOcurrencia(nodoT** lista,Termino dato)//primer criterio de orden ID, segundo POS
+{
     nodoT* nuevo=crearNodoT(dato);
+    nodoT* ant,* seg;
 
     if(*lista){
 
-        if((*lista)->idDOC > dato.idDOC){
+        if((*lista)->idDOC > dato.idDOC || ( (*lista)->idDOC == dato.idDOC && (*lista)->pos > dato.pos)){
 
             nuevo->sig=(*lista);
             (*lista)=nuevo;
+
+        }else{
+
+            ant=(*lista);
+            seg=(*lista)->sig;
+
+            while(seg && ( (seg->idDOC < dato.idDOC) || (seg->idDOC == dato.idDOC && seg->pos < dato.pos) ) ){
+
+                ant=seg;
+                seg=seg->sig;
+            }
+
+            ant->sig=nuevo;
+            nuevo->sig=seg;
         }
     }
 }
@@ -64,22 +108,22 @@ void insertarNuevaOcurrencia(nodoT** lista,Termino dato)
 void insertarTerminoExistente(nodoA** arbol,Termino dato)
 {
     //modificacion de la frecuencia
-    *arbol->frecuencia+=1;
+    (*arbol)->frecuencia+=1;
 
     //insercion en la lista
     insertarNuevaOcurrencia(&(*arbol)->ocurrencias,dato);
 }
 
-void buscarDato(nodoA* arbol,int dato,nodoA** encontrado)
+void existeTermino(nodoA* arbol,char palabra[],nodoA** encontrado)
 {
     if(arbol){
 
-        if(arbol->dato != dato){
+        if(strcmp(arbol->palabra,palabra)!=0){
 
-            if(dato > arbol->dato){
-                buscarDato(arbol->der,dato,encontrado);
+            if(strcmp(palabra,arbol->palabra)>0){
+                existeTermino(arbol->der,palabra,encontrado);
             }else{
-                buscarDato(arbol->izq,dato,encontrado);
+                existeTermino(arbol->izq,palabra,encontrado);
             }
         }else{
             *encontrado=arbol;

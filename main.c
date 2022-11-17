@@ -55,6 +55,31 @@ nodoA* crearNodoA(Termino dato)
     return nuevo;
 }
 
+void mostrarLista(nodoT* lista)
+{
+    while(lista){
+
+        printf("\nId: %d",lista->idDOC);
+        printf("\nPos: %d",lista->pos);
+
+        printf("\n.....................\n");
+
+        lista=lista->sig;
+    }
+}
+
+void mostrarArbol(nodoA* arbol)
+{
+    if(arbol){
+        mostrarArbol(arbol->izq);
+        printf("\nPalabra: %s",arbol->palabra);
+        printf("\nFrecuencia: %d",arbol->frecuencia);
+        mostrarLista(arbol->ocurrencias);
+        printf("\n\n-------------------\n\n");
+        mostrarArbol(arbol->der);
+    }
+}
+
 //!-----------------------------------FUNCIONES----------------------------------------------------
 
 void insertarNuevoTermino(nodoA** arbol,Termino dato)
@@ -166,6 +191,10 @@ void cargarArbol(nodoA** arbol)
 
 int main()
 {
-    printf("Helloo!\n");
+    nodoA* arbol=NULL;
+    cargarArbol(&arbol);
+
+    //mostrarArbol(arbol);
+
     return 0;
 }

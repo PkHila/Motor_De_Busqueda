@@ -12,26 +12,24 @@ typedef struct {
 
 
 
-void inicializarString(char**miString, long longitud)
+void inicializarString(char*miString[], long longitud) //inicializa la string que contiene la totalidad del texto segun el tamaño del archivo
 {
-    *miString = (char*)malloc(sizeof(longitud));
+    *miString = (char*)malloc(longitud * sizeof(char));
 }
 
-void cargarTextoAString(char* nombreTexto, char** stringTexto)
+
+
+void cargarTextoAString(char* nombreTexto, char* stringTexto[]) //copia la totalidad de un archivo de texto a una sola string.
 {
     long cant;
     FILE* arch = fopen(nombreTexto,"rb");
     if(arch)
     {
         fseek(arch, 0, SEEK_END);
-        cant = ftell(arch);
-        printf("el archivo tiene %ld bytes\n", cant);
+        cant = ftell(arch); //cant de bytes del texto
         rewind(arch);
-        inicializarString(stringTexto, cant+1);
+        inicializarString(stringTexto, cant);
         fread(*stringTexto, sizeof(char),cant,arch);
-        printf("%s",*stringTexto);
-
-
     }
     fclose(arch);
 }
@@ -39,7 +37,7 @@ void cargarTextoAString(char* nombreTexto, char** stringTexto)
 
 int main()
 {
-    char* stringTotal;
+    char* stringTotal = NULL;
     cargarTextoAString("Prueba.txt", &stringTotal);
     printf("%s", stringTotal);
     return 0;

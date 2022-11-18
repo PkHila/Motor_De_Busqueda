@@ -48,7 +48,7 @@ termino crearTermino(char palabra[20], int idDocumento, int pos)
 int caracterValido(char c)
 {
 
-    if(31 < c && c < 48)
+    if(31 < c && c < 48) ///faltan el resto de las condiciones
     {
         return 0;
     }
@@ -62,20 +62,23 @@ int caracterValido(char c)
 void separarPalabras(char* stringTotal, int idDocumento)
 {
     char palabra[20];
-    int i = 0;
-    int j = 0;
+    int i = 0; //indice de texto
+    int j = 0; //indice de palabra individual
 
     while(i < strlen(stringTotal)) //mientras el texto no haya terminado
     {
-        if(caracterValido(stringTotal[i]))
+        if(caracterValido(stringTotal[i])) //si el caractér es valido, se agrega a la nueva palabra
         {
             palabra[j] = stringTotal[i];
             j++;
         }
         else
         {
+            if(j>0)//si la palabra aumentó de 0, quiere decir que es valida y se creará un nuevo termino
+            {
+                termino nuevoTermino = crearTermino(palabra, idDocumento, i);
+            }
             j = 0;
-            termino nuevoTermino = crearTermino(palabra, idDocumento, i);
         }
         i++;
     }

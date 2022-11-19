@@ -2,6 +2,8 @@
 #include <stdlib.h>
 #include <string.h>
 
+#define DICCIONARIO "diccionario.bin"
+
 typedef struct
 {
 
@@ -12,15 +14,6 @@ typedef struct
 } termino;
 
 
-
-
-void inicializarString(char*miString[], long longitud) //inicializa la string que contiene la totalidad del texto segun el tamaño del archivo
-{
-    *miString = (char*)malloc(longitud * sizeof(char));
-}
-
-
-
 void cargarTextoAString(char* nombreTexto, char* stringTexto[]) //copia la totalidad de un archivo de texto a una sola string.
 {
     long cant;
@@ -29,7 +22,7 @@ void cargarTextoAString(char* nombreTexto, char* stringTexto[]) //copia la total
     {
         fseek(arch, 0, SEEK_END);
         cant = ftell(arch); //cant de bytes del texto
-        inicializarString(stringTexto, cant);
+        *stringTexto = (char*)malloc(cant * sizeof(char));
         rewind(arch);
         fread(*stringTexto, sizeof(char),cant,arch);
     }
@@ -48,13 +41,13 @@ termino crearTermino(char palabra[20], int idDocumento, int pos)
 int caracterValido(char c)
 {
 
-    if(31 < c && c < 48) ///faltan el resto de las condiciones
+    if((64 < c && c < 91) || (96 < c && c < 123)) ///faltan el resto de las condiciones
     {
-        return 0;
+        return 1;
     }
     else
     {
-       return 1;
+        return 0;
     }
 
 }
@@ -64,24 +57,29 @@ void separarPalabras(char* stringTotal, int idDocumento)
     char palabra[20];
     int i = 0; //indice de texto
     int j = 0; //indice de palabra individual
-
-    while(i < strlen(stringTotal)) //mientras el texto no haya terminado
+    FILE* arch = fopen(DICCIONARIO, "ab");
+    if (arch)
     {
-        if(caracterValido(stringTotal[i])) //si el caractér es valido, se agrega a la nueva palabra
+        while(i < strlen(stringTotal)) //mientras el texto no haya terminado
         {
-            palabra[j] = stringTotal[i];
-            j++;
-        }
-        else
-        {
-            if(j>0)//si la palabra aumentó de 0, quiere decir que es valida y se creará un nuevo termino
+            if(caracterValido(stringTotal[i])) //si el caracter es valido, se agrega a la nueva palabra
             {
-                termino nuevoTermino = crearTermino(palabra, idDocumento, i);
+                palabra[j] = stringTotal[i];
+                j++;
             }
-            j = 0;
+            else
+            {
+                if(j>0)//si la palabra aumento de 0, quiere decir que es valida y se creara un nuevo termino
+                {
+                    termino nuevoTermino = crearTermino(palabra, idDocumento, i);
+                    fwrite(&nuevoTermino, sizeof(termino),1,arch);
+                }
+                j = 0;
+            }
+            i++;
         }
-        i++;
     }
+    fclose(arch);
 }
 
 void generarNombreArchivo(char* nombreArch[20], int id)
@@ -108,15 +106,18 @@ void crearDiccionario(int idMaxima)
         if(arch)
         {
             cargarTextoAString(nombreArchivo, &stringTotal);
-            separarPalabras(stringTotal, indice);
 
         }
         fclose(arch);
 
+        separarPalabras(stringTotal, indice);
+        free(stringTotal);
         indice++;
     }
 
 }
+
+
 
 
 int main()
@@ -134,14 +135,17 @@ int main()
     printf("%s\n", nombre);
 
     ///Prueba de caracteres validos
-    char c1 = '!';
-    char c2 = 'X';
-    char c3 = 'b';
-    char c4 = ' ';
+    char c1 = ';';
+    char c2 = '.';
+    char c3 = '{';
+    char c4 = 'n';
     printf("c1 %c = %i\n", c1, caracterValido(c1));
     printf("c2 %c = %i\n", c2, caracterValido(c2));
     printf("c3 %c = %i\n", c3, caracterValido(c3));
     printf("c4 %c = %i\n", c4, caracterValido(c4));
+
+
+
 
     return 0;
 }

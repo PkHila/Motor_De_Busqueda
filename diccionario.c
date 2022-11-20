@@ -43,6 +43,7 @@ void separarPalabras(char* textoCompleto, int idDocumento)
     char* palabra = (char*)calloc(20,sizeof(char));
     int i = 0; //indice de texto
     int j = 0; //indice de palabra individual
+    int contadorPalabra = 1;
     FILE* arch = fopen(DICCIONARIO, "ab");
     if (arch)
     {
@@ -57,8 +58,9 @@ void separarPalabras(char* textoCompleto, int idDocumento)
             {
                 if(j>0)//si la palabra aumento de 0, quiere decir que es valida y se creara un nuevo termino
                 {
-                    termino nuevoTermino = crearTermino(palabra, idDocumento, i);
+                    termino nuevoTermino = crearTermino(palabra, idDocumento, contadorPalabra);
                     fwrite(&nuevoTermino, sizeof(termino),1,arch);
+                    contadorPalabra++;
                     memset(palabra,0,strlen(palabra)); //vacia la palabra
                 }
                 j = 0;
@@ -133,4 +135,3 @@ void mostrarDiccionario()
     }
     fclose(arch);
 }
-

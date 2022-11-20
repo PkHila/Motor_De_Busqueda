@@ -22,7 +22,7 @@ void cargarTextoAString(char* nombreTexto, char* stringTexto[]) //copia la total
     {
         fseek(arch, 0, SEEK_END);
         cant = ftell(arch); //cant de bytes del texto
-        *stringTexto = (char*)malloc(cant * sizeof(char));
+        *stringTexto = (char*)calloc(cant, sizeof(char));
         rewind(arch);
         fread(*stringTexto, sizeof(char),cant,arch);
     }
@@ -40,21 +40,13 @@ termino crearTermino(char palabra[20], int idDocumento, int pos)
 
 int caracterValido(char c)
 {
-
-    if((64 < c && c < 91) || (96 < c && c < 123)) ///faltan el resto de las condiciones
-    {
-        return 1;
-    }
-    else
-    {
-        return 0;
-    }
-
+    int valido= ((64 < c && c < 91) || (96 < c && c < 123)) ? 1 :  0;
+    return valido;
 }
 
 void separarPalabras(char* stringTotal, int idDocumento)
 {
-    char palabra[20];
+    char* palabra = (char*)calloc(20,sizeof(char));
     int i = 0; //indice de texto
     int j = 0; //indice de palabra individual
     FILE* arch = fopen(DICCIONARIO, "ab");
@@ -73,6 +65,7 @@ void separarPalabras(char* stringTotal, int idDocumento)
                 {
                     termino nuevoTermino = crearTermino(palabra, idDocumento, i);
                     fwrite(&nuevoTermino, sizeof(termino),1,arch);
+                    memset(palabra,0,strlen(palabra)); //vacia la palabra
                 }
                 j = 0;
             }
@@ -80,13 +73,14 @@ void separarPalabras(char* stringTotal, int idDocumento)
         }
     }
     fclose(arch);
+    free(palabra);
 }
 
 void generarNombreArchivo(char* nombreArch[20], int id)
 {
     char idString[2];
     char cabecera[20] = "texto";
-    char* extension = ".bin";
+    char* extension = ".txt";
     sprintf(idString, "%i", id);
     strcat(cabecera, idString);
     strcat(cabecera, extension);
@@ -96,19 +90,12 @@ void generarNombreArchivo(char* nombreArch[20], int id)
 
 void crearDiccionario(int idMaxima)
 {
-    FILE* arch;
     char* nombreArchivo, *stringTotal;
     int indice = 1; //inicia en 1 ya que no hay texto0
     while(indice <= idMaxima)
     {
         generarNombreArchivo(&nombreArchivo, indice);
-        arch = fopen(nombreArchivo,"rb");
-        if(arch)
-        {
-            cargarTextoAString(nombreArchivo, &stringTotal);
-
-        }
-        fclose(arch);
+        cargarTextoAString(nombreArchivo, &stringTotal);
 
         separarPalabras(stringTotal, indice);
         free(stringTotal);
@@ -117,35 +104,42 @@ void crearDiccionario(int idMaxima)
 
 }
 
+void mostrarTermino(termino registro)
+{
+    printf("%s", registro.palabra);
+    printf("\nDoc num %i \nPos %i \n\n", registro.idDOC, registro.pos);
+}
 
+void mostrarDiccionario()
+{
+    termino aux;
+    FILE* arch = fopen(DICCIONARIO,"rb");
+    if(arch)
+    {
+        while(fread(&aux,sizeof(termino),1,arch)>0)
+        {
+            mostrarTermino(aux);
+        }
+    }
+    fclose(arch);
+}
 
 
 int main()
 {
-    char* stringTotal = NULL;
-    cargarTextoAString("Prueba.txt", &stringTotal);
-    printf("%s\n", stringTotal);
-    system("pause");
+    ///troubleshooting
+    char * stringTotal;
 
-    ///Prueba de nombre de archivo
-    printf("---------------Prueba de nombre de archivo -------------\n");
-    int a = 1;
-    char* nombre;
-    generarNombreArchivo(&nombre, a);
-    printf("%s\n", nombre);
+    cargarTextoAString("texto1.txt", &stringTotal);
+    separarPalabras(stringTotal, 1);
+    free(stringTotal);
 
-    ///Prueba de caracteres validos
-    char c1 = ';';
-    char c2 = '.';
-    char c3 = '{';
-    char c4 = 'n';
-    printf("c1 %c = %i\n", c1, caracterValido(c1));
-    printf("c2 %c = %i\n", c2, caracterValido(c2));
-    printf("c3 %c = %i\n", c3, caracterValido(c3));
-    printf("c4 %c = %i\n", c4, caracterValido(c4));
+    cargarTextoAString("texto2.txt", &stringTotal);
+    separarPalabras(stringTotal, 2);
+    free(stringTotal);
 
-
-
+    //crearDiccionario(2);
+    mostrarDiccionario();
 
     return 0;
 }

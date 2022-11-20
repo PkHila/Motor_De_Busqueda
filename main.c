@@ -35,12 +35,13 @@ typedef struct nodoA
 
 //!-----------------------------------ESTRUCTURA DE LA LISTA DE IDS----------------------------------------------------
 
-typedef struct nodoId{
+typedef struct nodoId
+{
 
     int id;
     struct nodoId* sig;
 
-}nodoId;
+} nodoId;
 
 //!-----------------------------------FUNCIONES BASE----------------------------------------------------
 
@@ -91,10 +92,12 @@ void mostrarArbol(nodoA* arbol)
     }
 }
 
-nodoId* crearNodoId(int idIngresado)
+nodoId* crearNodoId(int dato)
 {
-
-
+    nodoId* nuevo=(nodoId*)malloc(sizeof(nodoId));
+    nuevo->id=dato;
+    nuevo->sig=NULL;
+    return nuevo;
 }
 
 //!-----------------------------------FUNCIONES----------------------------------------------------
@@ -225,8 +228,9 @@ void cargarArbol(nodoA** arbol)
     }
 }
 
-/*  1) Buscar todas las apariciones de un término en algún documento (operación or).
-(Tiene que estar en alguno de los textos)*/
+
+/// 1) Buscar todas las apariciones de un término en algún documento (operación or).
+/// (Tiene que estar en alguno de los textos)
 
 void generarNombreArchivo(char* nombreArch[20], int id)
 {
@@ -239,7 +243,7 @@ void generarNombreArchivo(char* nombreArch[20], int id)
     *nombreArch = cabecera;
 }
 
-void encontrarApariciones(nodoA* arbol,char palabra[20], nodoT** encontrado)
+void encontrarPalabra(nodoA* arbol,char palabra[20], nodoT** encontrado)
 {
     if(arbol)
     {
@@ -249,25 +253,29 @@ void encontrarApariciones(nodoA* arbol,char palabra[20], nodoT** encontrado)
 
             if(strcmpi(arbol->palabra,palabra)<0)
             {
-                encontrarApariciones(arbol->der,palabra,encontrado);
+                encontrarPalabra(arbol->der,palabra,encontrado);
             }
             else
             {
-                encontrarApariciones(arbol->izq,palabra,encontrado);
+                encontrarPalabra(arbol->izq,palabra,encontrado);
             }
 
-        }else{
+        }
+        else
+        {
             *encontrado = arbol->ocurrencias;
         }
-    }else{
-       *encontrado = NULL;
+    }
+    else
+    {
+        *encontrado = NULL;
     }
 }
 
 void buscarApariciones(nodoA* arbol,char palabra[20])
 {
     nodoT* encontrado;
-    encontrarApariciones(arbol, palabra, &encontrado);
+    encontrarPalabra(arbol, palabra, &encontrado);
     if(encontrado ==NULL)
     {
         printf("Sin resultados.\n");
@@ -279,25 +287,45 @@ void buscarApariciones(nodoA* arbol,char palabra[20])
 }
 
 
-/*
-    2) Buscar todas las apariciones de un término en un documento y otros  (operacion and).
-    (Tiene que sí o sí estar en todos los textos que el usuario le indica)*/
+/// 2) Buscar todas las apariciones de un término en un documento y otros  (operacion and).
+/// (Tiene que sí o sí estar en todos los textos que el usuario le indica)
 
-//!ORDENACION DE LISTAS SIMPLEMENTE ENLAZADA DE IDS
-void insertarEnOrdenEspecie(nodoId** lista,int idIngresado)
+int buscarIdXDocumento(nodoT* lista,nodoId* listaId)
 {
-    nodoId* nuevo=crearNodoId(idIngresado);
-    nodoId* ant,* seg;
+    int flag=1;
 
-    if(!(*lista))
+    if(lista && listaId)
     {
-        (*lista)=nuevo;
+        while(listaId && flag==1)//id ingresados por el usuario
+        {
 
+            while(lista && listaId->id < lista->idDOC) // lista del arbol
+            {
+                lista=lista->sig;
+            }
+
+            if(lista->idDOC == listaId->id) //si se encuentra el id se pasa al siguiente
+            {
+                listaId=listaId->sig;
+            }
+            else //si no se encontro el id entonces se levanta la bandera
+            {
+                flag=0;
+            }
+        }
     }
-    else
+    return flag;
+}
+
+void insertarId(nodoId** lista,int dato)//orden ascendente
+{
+    nodoId* nuevo=crearNodoId(dato);
+    nodoId* ant, *seg;
+
+    if(*lista)
     {
 
-        if((*lista)->idEspecie > aux.idEspecie)
+        if((*lista)->id > dato)
         {
 
             nuevo->sig=(*lista);
@@ -306,52 +334,78 @@ void insertarEnOrdenEspecie(nodoId** lista,int idIngresado)
         }
         else
         {
+
             ant=(*lista);
             seg=(*lista)->sig;
 
-            while(seg && seg->idEspecie < aux.idEspecie)
+            while(seg && seg->id < dato)
             {
                 ant=seg;
                 seg=seg->sig;
             }
+
             ant->sig=nuevo;
             nuevo->sig=seg;
         }
     }
 }
 
-
-int buscarIds(int * idArreglo,int  validosID,nodoT* lista)
+void buscarAparicionesXDocumento(nodoA* arbol,char palabra[20])
 {
-    idArreglo[0] = 2;
-    lista
-    int flag = 0
-    int i;
-    while(flag==1 && i < validosID)
+    int idIngresado=0;
+    char control='s';
+
+    nodoT* encontrado;
+    int coincidencias=0; //1 si la palabra esta en todos los documentos - 0 si no
+
+    //lista local
+    nodoId* lista=NULL; //deberia ser nodot?
+
+    //primero encontrar la palabra-----------------------------
+    encontrarPalabra(arbol, palabra, &encontrado);
+
+    if(encontrado)
     {
-        if(idArreglo[0]== lista->idDOC)
+        //segundo cargar una lista con los id que indica el usuario y ordenarla-------------------
+        printf("Ingrese los id de los documentos donde desea realizar la busqueda: ");
+
+        while(control=='s')
         {
-           flag  =1;
+            printf("Id: ");
+            fflush(stdin);
+            scanf("%d",&idIngresado);
+
+            insertarId(&lista,idIngresado);
+
+            printf("Seleccionar otro id? s/n: ");
+            fflush(stdin);
+            scanf("%c",&control);
         }
-        i++
+
+        //tercero buscar los id en la lista----------------------------------------
+
+        coincidencias=buscarIdXDocumento(encontrado,lista);
+
+        //mostrar resultados
+        if(coincidencias)
+        {
+            //mostrar la lista de los id cargados usuario
+            printf("Palabras encontradas en todos los documentos");
+        }
+        else
+        {
+            printf("Palabra no encontrada en todos los documentos.");
+        }
     }
-
+    else
+    {
+        printf("Palabra no encontrada.");
+    }
 }
 
-void buscarEnXDocumentos(nodoA* arbol,char palabra[20], int *idArreglo, int validosID) ///patente pendiente
-{
-    nodoT * encontrado;
-
-    encontrarApariciones(arbol,palabra, &encontrado);
-
-    buscarIds(idArreglo,validosID,encontrado);
-
-}
+/// 3)Buscar la aparición de más de un término en el mismo documento.
 
 
-    /*
-    3)Buscar la aparición de más de un término en el mismo documento.
-*/
 
 int main()
 {
@@ -360,7 +414,8 @@ int main()
 
     mostrarArbol(arbol);
     printf("---------BUSQUEDA-------\n");
-    buscarApariciones(arbol, "salame");
+    //buscarApariciones(arbol, "salame");
+    buscarAparicionesXDocumento(arbol,"jamon");
 
     return 0;
 }

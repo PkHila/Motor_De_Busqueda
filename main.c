@@ -298,13 +298,12 @@ int buscarIdXDocumento(nodoT* lista,nodoId* listaId)
     {
         while(listaId && flag==1)//id ingresados por el usuario
         {
-
-            while(lista && listaId->id < lista->idDOC) // lista del arbol
+            while(lista && (lista->idDOC < listaId->id)) // lista del arbol
             {
                 lista=lista->sig;
             }
 
-            if(lista->idDOC == listaId->id) //si se encuentra el id se pasa al siguiente
+            if(lista && (lista->idDOC == listaId->id)) //si se encuentra el id se pasa al siguiente
             {
                 listaId=listaId->sig;
             }
@@ -347,6 +346,9 @@ void insertarId(nodoId** lista,int dato)//orden ascendente
             ant->sig=nuevo;
             nuevo->sig=seg;
         }
+    }else{
+
+        (*lista)=nuevo;
     }
 }
 
@@ -376,6 +378,7 @@ void buscarAparicionesXDocumento(nodoA* arbol,char palabra[20])
             scanf("%d",&idIngresado);
 
             insertarId(&lista,idIngresado);
+            //insertarId(&lista,4);
 
             printf("Seleccionar otro id? s/n: ");
             fflush(stdin);

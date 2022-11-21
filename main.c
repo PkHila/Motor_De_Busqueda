@@ -1,13 +1,15 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "funcionesUsuarios.h"
 
 #define diccionario "diccionario.bin"
+
+/*
 //!-----------------------------------ESTRUCTURA DEL DICCIONARIO----------------------------------------------------
 
 typedef struct
 {
-
     char palabra[20];
     int idDOC;
     int pos; //incrementa palabra por palabra, y no letra por letra
@@ -414,9 +416,11 @@ void buscarAparicionesXDocumento(nodoA* arbol,char palabra[20])
 }
 
 /// 3)Buscar la aparición de más de un término en el mismo documento.
+*/
 
 int main()
 {
+    /*
     nodoA* arbol=NULL;
     cargarArbol(&arbol);
 
@@ -424,6 +428,7 @@ int main()
     printf("---------BUSQUEDA-------\n");
     //buscarApariciones(arbol, "salame");
     //buscarAparicionesXDocumento(arbol,"salame");
+    */
 
     return 0;
 }

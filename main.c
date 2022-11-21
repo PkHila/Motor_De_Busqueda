@@ -3,6 +3,7 @@
 #include <string.h>
 #include "diccionario.h"
 #include "motorDeBusqueda.h"
+#include "funcionesUsuarios.h"
 
 
 int main()

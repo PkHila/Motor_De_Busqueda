@@ -34,12 +34,12 @@ typedef struct nodoA
 
 //!-----------------------------------FUNCIONES----------------------------------------------------
 
-nodoT* crearNodoT(Termino dato);
+nodoT* crearNodoT(int idDoc,int pos);
 nodoA* crearNodoA(Termino dato);
 void mostrarLista(nodoT* lista);
 void mostrarArbol(nodoA* arbol);
 void insertarNuevoTermino(nodoA** arbol,Termino dato);
-void insertarNuevaOcurrencia(nodoT** lista,Termino dato);
+void insertarNuevaOcurrencia(nodoT** lista,int idDoc,int pos);
 void insertarTerminoExistente(nodoA** arbol,Termino dato);
 void existeTermino(nodoA* arbol,char palabra[],nodoA** encontrado);
 void cargarTermino(nodoA** arbol,Termino aux);

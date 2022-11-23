@@ -6,6 +6,8 @@
 
 #include "funcionesUsuarios.h"
 
+#define diccionario "diccionario.bin"
+
 //!-----------------------------------FUNCIONES BASE----------------------------------------------------
 
 nodoId* crearNodoId(int dato)
@@ -26,13 +28,22 @@ void mostrarListaId(nodoId* lista)
 }
 //?
 
-typedef struct nodoPalabra
+nodoPalabra* crearNodoPalabra(char dato[20])
 {
-    char palabra[20];
-    struct nodoPalabra* sig;
+    nodoPalabra* nuevo=(nodoPalabra*)malloc(sizeof(nodoPalabra));
+    strcpy(nuevo->palabra,dato);
+    nuevo->sig=NULL;
+    return nuevo;
+}
 
-} nodoPalabra;
-
+void mostrarListaPlabras(nodoPalabra* lista)
+{
+    while(lista)
+    {
+        printf("\n%s ",lista->palabra);
+        lista=lista->sig;
+    }
+}
 
 //!-----------------------------------FUNCIONES CARGA DE DATOS----------------------------------------------------
 

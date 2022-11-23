@@ -8,6 +8,13 @@ typedef struct nodoId
 
 } nodoId;
 
+typedef struct nodoPalabra
+{
+    char palabra[20];
+    struct nodoPalabra* sig;
+
+} nodoPalabra;
+
 nodoId* crearNodoId(int dato);
 void mostrarListaId(nodoId* lista);
 void encontrarPalabra(nodoA* arbol,char palabra[20], nodoT** encontrado);

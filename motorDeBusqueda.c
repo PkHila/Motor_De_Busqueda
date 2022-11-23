@@ -5,14 +5,13 @@
 
 #define DICCIONARIO "diccionario.bin"
 
-
 //!-----------------------------------FUNCIONES BASE----------------------------------------------------
 
-nodoT* crearNodoT(Termino dato)
+nodoT* crearNodoT(int idDoc,int pos)
 {
     nodoT* nuevo=(nodoT*)malloc(sizeof(nodoT));
-    nuevo->idDOC=dato.idDOC;
-    nuevo->pos=dato.pos;
+    nuevo->idDOC=idDoc;
+    nuevo->pos=pos;
     nuevo->sig=NULL;
     return nuevo;
 }
@@ -22,7 +21,7 @@ nodoA* crearNodoA(Termino dato)
     nodoA* nuevo=(nodoA*)malloc(sizeof(nodoA));
     strcpy(nuevo->palabra,dato.palabra);
     nuevo->frecuencia=1;
-    nuevo->ocurrencias=crearNodoT(dato);
+    nuevo->ocurrencias=crearNodoT(dato.idDOC,dato.pos);
     nuevo->izq=NULL;
     nuevo->der=NULL;
     return nuevo;
@@ -74,14 +73,14 @@ void insertarNuevoTermino(nodoA** arbol,Termino dato)
 
 }
 
-void insertarNuevaOcurrencia(nodoT** lista,Termino dato)//primer criterio de orden ID, segundo POS
+void insertarNuevaOcurrencia(nodoT** lista,int idDoc,int pos)//primer criterio de orden ID, segundo POS
 {
-    nodoT* nuevo=crearNodoT(dato);
+    nodoT* nuevo=crearNodoT(idDoc,pos);
     nodoT* ant,* seg;
 
     if(*lista){
 
-        if((*lista)->idDOC > dato.idDOC || ( (*lista)->idDOC == dato.idDOC && (*lista)->pos > dato.pos)){
+        if((*lista)->idDOC > idDoc || ( (*lista)->idDOC == idDoc && (*lista)->pos > pos)){
 
             nuevo->sig=(*lista);
             (*lista)=nuevo;
@@ -91,7 +90,7 @@ void insertarNuevaOcurrencia(nodoT** lista,Termino dato)//primer criterio de ord
             ant=(*lista);
             seg=(*lista)->sig;
 
-            while(seg && ( (seg->idDOC < dato.idDOC) || (seg->idDOC == dato.idDOC && seg->pos < dato.pos) ) ){
+            while(seg && ( (seg->idDOC < idDoc) || (seg->idDOC == idDoc && seg->pos < pos) ) ){
 
                 ant=seg;
                 seg=seg->sig;
@@ -109,7 +108,7 @@ void insertarTerminoExistente(nodoA** arbol,Termino dato)
     (*arbol)->frecuencia+=1;
 
     //insercion en la lista
-    insertarNuevaOcurrencia(&(*arbol)->ocurrencias,dato);
+    insertarNuevaOcurrencia(&(*arbol)->ocurrencias,dato.idDOC,dato.pos);
 }
 
 void existeTermino(nodoA* arbol,char palabra[],nodoA** encontrado)

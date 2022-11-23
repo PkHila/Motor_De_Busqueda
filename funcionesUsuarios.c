@@ -6,6 +6,8 @@
 
 #include "funcionesUsuarios.h"
 
+//!-----------------------------------FUNCIONES BASE----------------------------------------------------
+
 nodoId* crearNodoId(int dato)
 {
     nodoId* nuevo=(nodoId*)malloc(sizeof(nodoId));
@@ -14,6 +16,7 @@ nodoId* crearNodoId(int dato)
     return nuevo;
 }
 
+//?
 void mostrarListaId(nodoId* lista)
 {
     while(lista){
@@ -21,82 +24,17 @@ void mostrarListaId(nodoId* lista)
         lista=lista->sig;
     }
 }
+//?
 
-/// 1) Buscar todas las apariciones de un término en algún documento (operación or).
-/// (Tiene que estar en alguno de los textos)
-
-void encontrarPalabra(nodoA* arbol,char palabra[20], nodoT** encontrado)
+typedef struct nodoPalabra
 {
-    if(arbol)
-    {
+    char palabra[20];
+    struct nodoPalabra* sig;
 
-        if(strcmpi(arbol->palabra,palabra)!=0)
-        {
+} nodoPalabra;
 
-            if(strcmpi(arbol->palabra,palabra)<0)
-            {
-                encontrarPalabra(arbol->der,palabra,encontrado);
-            }
-            else
-            {
-                encontrarPalabra(arbol->izq,palabra,encontrado);
-            }
 
-        }
-        else
-        {
-            *encontrado = arbol->ocurrencias;
-        }
-    }
-    else
-    {
-        *encontrado = NULL;
-    }
-}
-
-void buscarApariciones(nodoA* arbol,char palabra[20])
-{
-    nodoT* encontrado;
-    encontrarPalabra(arbol, palabra, &encontrado);
-    if(encontrado ==NULL)
-    {
-        printf("Sin resultados.\n");
-    }
-    else
-    {
-        printf("\n\tLISTA DE IDS");
-        mostrarLista(encontrado);
-    }
-}
-
-/// 2) Buscar todas las apariciones de un término en un documento y otros  (operacion and).
-/// (Tiene que sí o sí estar en todos los textos que el usuario le indica)
-
-int buscarIdXDocumento(nodoT* lista,nodoId* listaId)
-{
-    int flag=1;
-
-    if(lista && listaId)
-    {
-        while(listaId && flag==1)//id ingresados por el usuario
-        {
-            while(lista && (lista->idDOC < listaId->id)) // lista del arbol
-            {
-                lista=lista->sig;
-            }
-
-            if(lista && (lista->idDOC == listaId->id)) //si se encuentra el id se pasa al siguiente
-            {
-                listaId=listaId->sig;
-            }
-            else //si no se encontro el id entonces se levanta la bandera
-            {
-                flag=0;
-            }
-        }
-    }
-    return flag;
-}
+//!-----------------------------------FUNCIONES CARGA DE DATOS----------------------------------------------------
 
 void insertarId(nodoId** lista,int dato)//orden ascendente
 {
@@ -128,59 +66,307 @@ void insertarId(nodoId** lista,int dato)//orden ascendente
             ant->sig=nuevo;
             nuevo->sig=seg;
         }
-    }else{
+    }
+    else
+    {
 
         (*lista)=nuevo;
     }
 }
 
-void buscarAparicionesXDocumento(nodoA* arbol,char palabra[20])
+void cargarIds(nodoId** lista)
 {
-    int idIngresado=0;
+    int id=0;
     char control='s';
-    nodoT* encontrado;
-    int coincidencias=0;
 
-    nodoId* lista=NULL;
-
-    //primero encontrar la palabra-----------------------------
-    encontrarPalabra(arbol, palabra, &encontrado);
-
-    if(encontrado)
+    while(control=='s')
     {
-        //segundo cargar una lista con los id que indica el usuario y ordenarla-------------------
-        printf("Ingrese los id de los documentos donde desea realizar la busqueda: ");
+        printf("\nIngrese los id donde desea realizar la busqueda: ");
+        fflush(stdin);
+        scanf("%d",&id);
 
-        while(control=='s')
+        //!VERIFICACION DE ID VALIDO //! HILA CANT_TEXTOS LIBRERIA DICCIONARIO
+
+        insertarId(lista,id);
+
+        printf("\nCargar otro id? s/n: ");
+        fflush(stdin);
+        scanf("%c",&control);
+
+        system("cls");
+    }
+}
+
+void insertarPalabra(nodoPalabra** lista,char palabra[])
+{
+    nodoPalabra* nuevo=crearNodoPalabra(palabra);
+    nuevo->sig=(*lista);
+    (*lista)=nuevo;
+}
+
+int verificarPalabra(nodoA* arbol,char palabra[])
+{
+    int encontrado=0;
+
+    if(arbol)
+    {
+
+        if(strcmpi(arbol->palabra,palabra)!=0)
         {
-            printf("Id: ");
-            fflush(stdin);
-            scanf("%d",&idIngresado);
-
-            insertarId(&lista,idIngresado);
-
-            printf("Seleccionar otro id? s/n: ");
-            fflush(stdin);
-            scanf("%c",&control);
-        }
-
-        //tercero buscar los id en la lista----------------------------------------
-
-        coincidencias=buscarIdXDocumento(encontrado,lista);
-
-        if(coincidencias)
-        {
-            printf("\n\tLISTA DE IDS");
-            mostrarListaId(lista);
-            printf("\nPalabras encontradas en todos los documentos");
+            if(strcmpi(palabra,arbol->palabra)>0)
+            {
+                encontrado=verificarPalabra(arbol->der,palabra);
+            }
+            else
+            {
+                encontrado=verificarPalabra(arbol->izq,palabra);
+            }
         }
         else
         {
-            printf("\nPalabra no encontrada en todos los documentos.");
+            encontrado=1;
         }
+    }
+
+    return encontrado;
+}
+
+void cargarPalabras(nodoA* arbol,nodoPalabra** lista)
+{
+    char palabra[20]= {0};
+    char control='s';
+    int validacion=0;
+
+    while(control=='s')
+    {
+        printf("Ingrese la palabra que desea buscar: ");
+        fflush(stdin);
+        gets(palabra);
+
+        validacion=verificarPalabra(arbol,palabra);
+
+        if(validacion)
+        {
+            insertarPalabra(lista,palabra);
+
+            printf("\nCargar otra palabra? s/n: ");
+            fflush(stdin);
+            scanf("%c",&control);
+
+        }
+        else
+        {
+            printf("\nPalabra ingresada no valida. Vuelva a ingresar.\n");
+            system("pause");
+        }
+
+        system("cls");
+    }
+}
+
+//!-----------------------------------FUNCIONES DE BUSQUEDA----------------------------------------------------
+
+/// 1) BUSCAR APARICIONES EN ALGUNOS DOCS
+
+void buscarAparicionesEnAlgunosDocs(nodoA* arbol,char palabra[20],nodoT** apariciones)
+{
+    //encontrar la palabra
+    nodoA* palabraEncontrada;
+    existeTermino(arbol,palabra,&palabraEncontrada);
+
+    //retorno resultado
+    (*apariciones)=palabraEncontrada->ocurrencias;
+}
+
+/// 2) BUSCAR APARICIONES EN TODOS LOS DOS
+
+int coincideId(nodoT* lista,int idBuscado,nodoT** apariciones)
+{
+    int encontrado=0;
+
+    if(lista)
+    {
+
+        while(lista && lista->idDOC < idBuscado)
+        {
+            lista=lista->sig;
+        }
+
+        if(lista && lista->idDOC == idBuscado)
+        {
+            encontrado=1;
+
+            while(lista && lista->idDOC == idBuscado)
+            {
+                insertarNuevaOcurrencia(apariciones,lista->idDOC,lista->pos);
+                lista=lista->sig;
+            }
+        }
+    }
+
+    return encontrado;
+}
+
+int buscarAparicionesEnTodosDocs(nodoA* arbol,char palabra[],nodoId* idBuscado,nodoT** apariciones)
+{
+    int coincide=1;
+    nodoT* aux=NULL;
+
+    //encontrar la palabra
+    nodoA* palabraEncontrada;
+    existeTermino(arbol,palabra,&palabraEncontrada);
+
+    //filtro de apariciones
+    while(idBuscado && coincide==1)
+    {
+        coincide=coincideId(palabraEncontrada->ocurrencias,idBuscado->id,&aux); //filtro de coincidencia
+
+        if(coincide)
+        {
+            idBuscado=idBuscado->sig; //avanza al sig id solo si el anterior ya se encontro
+        }
+    }
+
+    if(coincide)
+    {
+        (*apariciones)=aux;
+        return 1;
     }
     else
     {
-        printf("Palabra no encontrada.");
+        return 0;
     }
 }
+
+/// 3)Buscar la aparicion de mas de un termino en el mismo documento.
+
+void buscarVariasAparicionesEnXDoc(nodoA* arbol,nodoPalabra* palabras,int id,nodoT** ocurrencias)
+{
+    int coincide=0;
+    nodoA* palabraEncontrada;
+
+    while(palabras)
+    {
+        existeTermino(arbol,palabras->palabra,&palabraEncontrada);
+
+        coincide=coincideId(palabraEncontrada->ocurrencias,id,ocurrencias); //filtro de coincidencia
+
+        //se podria avisar cuales si y cuales no con la var coincide
+
+        palabras=palabras->sig;
+    }
+}
+
+/// 4. Buscar una frase completa (las palabras deben estar contiguas en alguno de los documentos).
+
+/// 5. Buscar la palabra de mÃ¡s frecuencia que aparece en un doc
+
+int sumarApariciones(nodoT* lista,int id)
+{
+    int cant=0;
+
+    if(lista)
+    {
+
+        while(lista && lista->idDOC < id)
+        {
+            lista=lista->sig;
+        }
+
+        while(lista && lista->idDOC == id)
+        {
+            cant+=1;
+            lista=lista->sig;
+        }
+    }
+
+    return cant;
+}
+
+void encontrarPalabraMasFrecuente(nodoA* arbol,int id,char palabra[],int* maxApariciones)
+{
+    int cant=0;
+
+    if(arbol)
+    {
+
+        cant=sumarApariciones(arbol->ocurrencias,id);
+
+        if(cant > *maxApariciones)
+        {
+            *maxApariciones=cant;
+            strcpy(palabra,arbol->palabra);
+        }
+
+        encontrarPalabraMasFrecuente(arbol->izq,id,palabra,maxApariciones);
+        encontrarPalabraMasFrecuente(arbol->der,id,palabra,maxApariciones);
+    }
+}
+
+void buscarPalabraMasFrecuente(nodoA* arbol,int id,nodoT** apariciones)
+{
+    char palabra[20]= {0};
+    nodoA* palabraEncontrada;
+    int maxApariciones=-1;
+
+    encontrarPalabraMasFrecuente(arbol,id,palabra,&maxApariciones);
+
+    existeTermino(arbol,palabra,&palabraEncontrada);
+
+    coincideId(palabraEncontrada->ocurrencias,id,apariciones);
+}
+
+/// 6. Utilizar la distancia de levenshtein en el ingreso de una palabra y sugerir similares a partir de una distancia <= 3.
+
+//!-----------------------------------FUNCIONES DE MOSTRAR RESULTADOS----------------------------------------------------
+
+void mostrarPalabra(Termino temp,nodoT* lista)
+{
+    if(lista){
+
+        while(lista && lista->idDOC < temp.idDOC){
+
+            lista=lista->sig;
+        }
+
+        if(lista && lista->idDOC == temp.idDOC){
+
+            while(lista && lista->idDOC == temp.idDOC && lista->pos < temp.pos){
+                lista=lista->sig;
+            }
+
+            if(lista && lista->idDOC == temp.idDOC && lista->pos == temp.pos){
+                printf("<< %s >> ",temp.palabra);
+
+            }else{
+                printf("%s ",temp.palabra);
+            }
+
+        }
+    }
+}
+
+void mostrarDocumento(nodoT* lista)
+{
+    int i=0;
+    Termino temp;
+    FILE* arch=fopen(diccionario,"rb");
+
+    if(arch)
+    {
+        while(fread(&temp,sizeof(Termino),1,arch)>0)
+        {
+            mostrarPalabra(temp,lista);
+            i+=1;
+
+             if(i==13){
+                 printf("\n");
+                 i=0;
+             }
+
+        }
+
+        fclose(arch);
+    }
+}
+

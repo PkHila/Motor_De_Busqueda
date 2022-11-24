@@ -17,12 +17,21 @@ int main()
     nodoA* arbol=NULL;
     cargarArbol(&arbol);
 
-    mostrarArbol(arbol);
+    //mostrarArbol(arbol);
+
 
     //USUARIO
     nodoT* apariciones=NULL;
 
-    buscarFrase(arbol);
+    buscarAparicionesEnAlgunosDocs(arbol,"Diego",&apariciones);
+    mostrarLista(apariciones);
+
+    //buscarFrase(arbol);
+
+    apariciones = NULL;
+    buscarAparicionesEnAlgunosDocs(arbol,"Diego",&apariciones);
+    mostrarLista(apariciones);
+    printf("\nnooooooooo\n");
 
     /*
     printf("\t ---------------------------------------------\n");

@@ -3,8 +3,6 @@
 #include <string.h>
 #include "motorDeBusqueda.h"
 
-#define diccionario "diccionario.bin"
-
 //!-----------------------------------FUNCIONES BASE----------------------------------------------------
 
 nodoT* crearNodoT(int idDoc,int pos)

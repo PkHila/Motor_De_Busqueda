@@ -1,6 +1,8 @@
 #ifndef MOTORDEBUSQUEDA_H_INCLUDED
 #define MOTORDEBUSQUEDA_H_INCLUDED
 
+#define diccionario "diccionario.bin"
+
 //!-----------------------------------ESTRUCTURA DEL DICCIONARIO----------------------------------------------------
 
 typedef struct{

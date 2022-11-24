@@ -37,7 +37,7 @@ int main()
 
 
 
-    printf("\t ---------------------------------------------\n");
+   /* printf("\t ---------------------------------------------\n");
     printf("\t|              BUSQUEDA EN TODOS              |\n");
     printf("\t ---------------------------------------------\n");
 
@@ -98,7 +98,7 @@ int main()
     buscarPalabraMasFrecuente(arbol,id,&apariciones);
 
     mostrarLista(apariciones);
-    mostrarDocumento(apariciones);
+    mostrarDocumento(apariciones);*/
 
     return 0;
 }

@@ -1,0 +1,5 @@
+Informacion sobre Windows 10
+
+Windows 10 se lanzo el 29 de Julio de 2015, es la unificacion de todos los sistemas operativos de Microsoft en una unica plataforma, puede usarse en los PC, smartphones, tablets y Xbox, siendo el primer sistema operativo que se ofrece de manera gratuita a los usuarios que ya contaran con Windows 7, Windows 8.1 o Windows Phone 8.1.
+
+El sistema operativo ofrece una interfaz de Windows actualizada, centrandose en el iconico menu Inicio y creando una experiencia intuitiva desde alli. Windows 10 pone voz a Microsoft para ofrecer una experiencia mas coloquial y accesible que antes. Cortana, el primer asistente verdaderamente digital de Microsoft, hace su primera aparicion en un equipo con Windows 10 y despues se introduce con gran exito en los telefonos Windows 8.1. Aprendiendo de los comportamientos y las preferencias de cada persona que interactua con ella, Cortana crea una experiencia personalizada en todos los equipos, tabletas y telefonos Windows. Es inteligente y ocurrente, y supone un gran paso adelante hacia un Windows mas personal.

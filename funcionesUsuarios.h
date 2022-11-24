@@ -1,6 +1,8 @@
 #ifndef FUNCIONESUSUARIOS_H_INCLUDED
 #define FUNCIONESUSUARIOS_H_INCLUDED
 
+#include "motorDeBusqueda.h"
+
 typedef struct nodoId
 {
     int id;

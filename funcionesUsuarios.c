@@ -1,10 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "funcionesUsuarios.h"
 
 #include "motorDeBusqueda.h"
-
-#include "funcionesUsuarios.h"
 
 #define diccionario "diccionario.bin"
 
@@ -319,12 +318,13 @@ void buscarPalabraMasFrecuente(nodoA* arbol,int id,nodoT** apariciones)
     char palabra[20]= {0};
     nodoA* palabraEncontrada;
     int maxApariciones=-1;
+    int coincide=0;
 
     encontrarPalabraMasFrecuente(arbol,id,palabra,&maxApariciones);
 
     existeTermino(arbol,palabra,&palabraEncontrada);
 
-    coincideId(palabraEncontrada->ocurrencias,id,apariciones);
+    coincide=coincideId(palabraEncontrada->ocurrencias,id,apariciones);
 }
 
 /// 6. Utilizar la distancia de levenshtein en el ingreso de una palabra y sugerir similares a partir de una distancia <= 3.

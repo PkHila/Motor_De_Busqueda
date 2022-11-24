@@ -22,16 +22,21 @@ int main()
     //USUARIO
     nodoT* apariciones=NULL;
 
-    /*
     printf("\t ---------------------------------------------\n");
     printf("\t|             BUSQUEDA EN ALGUNOS             |\n");
     printf("\t ---------------------------------------------\n");
 
-    buscarAparicionesEnAlgunosDocs(arbol,"salame",&apariciones);
-    mostrarLista(apariciones);
-    */
+    char palabra[20]={0};
+    printf("\nIngrese la palabra que desea buscar: ");
+    fflush(stdin);
+    gets(palabra);
 
-    /*
+    buscarAparicionesEnAlgunosDocs(arbol,palabra,&apariciones);
+    mostrarLista(apariciones);
+    mostrarDocumento(apariciones);
+
+
+
     printf("\t ---------------------------------------------\n");
     printf("\t|              BUSQUEDA EN TODOS              |\n");
     printf("\t ---------------------------------------------\n");
@@ -41,22 +46,28 @@ int main()
     nodoId* listaId=NULL;
     cargarIds(&listaId);
 
-    aparicionEnTodos=buscarAparicionesEnTodosDocs(arbol,"salame",listaId,&apariciones);
+    char palabra[20]={0};
+    printf("\nIngrese la palabra que desea buscar: ");
+    fflush(stdin);
+    gets(palabra);
+
+    aparicionEnTodos=buscarAparicionesEnTodosDocs(arbol,palabra,listaId,&apariciones);
 
     if(aparicionEnTodos)
     {
         mostrarLista(apariciones);
+        mostrarDocumento(apariciones);
     }else{
 
         printf("\nla palabra no se encuentra en todos los documentos indicados\n");
     }
-    */
 
-    //printf("\t ---------------------------------------------\n");
-    //printf("\t|   BUSQUEDA VARIOS TERMINOS EN X DOCUMENTO   |\n");
-    //printf("\t ---------------------------------------------\n");
 
-    /*
+    printf("\t ---------------------------------------------\n");
+    printf("\t|   BUSQUEDA VARIOS TERMINOS EN X DOCUMENTO   |\n");
+    printf("\t ---------------------------------------------\n");
+
+
     nodoPalabra* palabras=NULL;
     cargarPalabras(arbol,&palabras);
 
@@ -69,7 +80,8 @@ int main()
 
     buscarVariasAparicionesEnXDoc(arbol,palabras,id,&apariciones);
     mostrarLista(apariciones);
-    */
+
+    mostrarDocumento(apariciones);
 
 
     printf("\t ---------------------------------------------\n");
@@ -85,10 +97,8 @@ int main()
 
     buscarPalabraMasFrecuente(arbol,id,&apariciones);
 
-    //mostrarLista(apariciones);
-
+    mostrarLista(apariciones);
     mostrarDocumento(apariciones);
-
 
     return 0;
 }

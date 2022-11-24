@@ -374,7 +374,6 @@ void mostrarDocumento(nodoT* lista)
                  printf("\n");
                  i=0;
              }
-
         }
 
         fclose(arch);

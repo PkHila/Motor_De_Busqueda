@@ -37,7 +37,7 @@ void mostrarPalabra(Termino temp,nodoT* lista);
 void mostrarDocumento(nodoT* lista);
 void ingresarFrase(char* frase);
 void separarFrase(nodoA * arbol, char* frase, char arregloPalabras[][20], int* validos);
-void buscarPalabrasContinuas(nodoT** arreglo,int validos);
-void buscarFrase(nodoA* arbol);
+void buscarPalabrasContinuas(nodoT** arreglo,int validos, nodoT** apariciones);
+void buscarFrase(nodoA* arbol, nodoT** apariciones);
 
 #endif // FUNCIONESUSUARIOS_H_INCLUDED

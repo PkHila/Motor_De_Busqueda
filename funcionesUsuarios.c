@@ -310,7 +310,7 @@ void separarFrase(nodoA * arbol, char* frase, char arregloPalabras[][20], int* v
 
 }
 
-void buscarPalabrasContinuas(nodoT** arreglo,int validos)
+void buscarPalabrasContinuas(nodoT** arreglo,int validos, nodoT** apariciones)
 {
     int i = 1; //indice de validos
     int continuo = 0;
@@ -330,7 +330,7 @@ void buscarPalabrasContinuas(nodoT** arreglo,int validos)
                         }
                         else
                         {
-                            printf("La frase se encontro en el texto %i, en la pos %i\n\n", arreglo[0]->idDOC, arreglo[0]->pos);
+                            insertarNuevaOcurrencia(apariciones,arreglo[0]->idDOC, arreglo[0]->pos);
                             arreglo[0] = arreglo[0]->sig;
                             i = 1;
                         }
@@ -356,7 +356,7 @@ void buscarPalabrasContinuas(nodoT** arreglo,int validos)
 }
 
 
-void buscarFrase(nodoA* arbol)
+void buscarFrase(nodoA* arbol, nodoT** apariciones)
 {
     ///El usuario ingresa la frase
     char fraseBusqueda[100] = {0};
@@ -399,7 +399,7 @@ void buscarFrase(nodoA* arbol)
         }
         else
         {
-            buscarPalabrasContinuas(arregloOcurrencias, validos);
+            buscarPalabrasContinuas(arregloOcurrencias, validos, apariciones);
         }
     }
     else

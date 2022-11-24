@@ -299,6 +299,141 @@ void buscarVariasAparicionesEnXDoc(nodoA* arbol,nodoPalabra* palabras,int id,nod
 
 /// 4. Buscar una frase completa (las palabras deben estar contiguas en alguno de los documentos).
 
+void ingresarFrase(char* frase)
+{
+    printf("Ingrese la frase a buscar\n");
+    fflush(stdin);
+    gets(frase);
+}
+
+void separarFrase(nodoA * arbol, char* frase, char arregloPalabras[][20], int* validos)
+{
+    int indiceFrase = 0;
+    int indicePalabra = 0;
+    int indiceValidos = 0;
+    while(indiceFrase < strlen(frase) && frase[indiceFrase]!='\0')
+    {
+        if(caracterValido(frase[indiceFrase])==1)
+        {
+            arregloPalabras[indiceValidos][indicePalabra] = frase[indiceFrase];
+            indicePalabra++;
+        }
+        else
+        {
+            if(indicePalabra>0)
+            {
+                indicePalabra = 0;
+                indiceValidos++;
+            }
+        }
+        indiceFrase++;
+    }
+
+    if(indicePalabra>0)
+    {
+        indiceValidos++;
+    }
+    *validos = indiceValidos;
+
+}
+
+void buscarPalabrasContinuas(nodoT** arreglo,int validos, nodoT** apariciones)
+{
+    int i = 1; //indice de validos
+    int continuo = 0;
+
+    while(arreglo[0])
+    {
+        while(arreglo[0] && arreglo[i] && arreglo[0]->idDOC >= arreglo[i]->idDOC) //recorre mientras que el id de la comparacion sea menor o igual
+        {
+            if(arreglo[0]->idDOC == arreglo[i]->idDOC)
+            {
+                    if(arreglo[0]->pos+i == arreglo[i]->pos)
+                    {
+                        if(i+1<validos) //si el sig indice est� dentro de validos
+                        {
+                            i++;
+                            continuo = 1;
+                        }
+                        else
+                        {
+                            insertarNuevaOcurrencia(apariciones,arreglo[0]->idDOC, arreglo[0]->pos);
+                            arreglo[0] = arreglo[0]->sig;
+                            i = 1;
+                        }
+                    }
+            }
+            if(arreglo[i])
+            {
+                if(continuo == 0)
+                {
+                    arreglo[i] = arreglo[i]->sig;
+                }
+                else
+                {
+                    continuo = 0;
+                }
+            }
+        }
+        if(arreglo[0])
+        arreglo[0] = arreglo[0]->sig;
+        i = 1;
+
+    }
+}
+
+
+void buscarFrase(nodoA* arbol, nodoT** apariciones)
+{
+    ///El usuario ingresa la frase
+    char fraseBusqueda[100] = {0};
+    ingresarFrase(fraseBusqueda);
+
+    ///Se separa la frase en palabras
+    char arregloPalabras[20][20] = {0};
+    int validos = 0;
+    separarFrase(arbol, fraseBusqueda, arregloPalabras,&validos);
+
+    ///Comprobamos que las palabras existan
+    nodoA* encontrado = NULL;
+    nodoT* arregloOcurrencias[validos];
+    int i = 0;
+    int flag = 1;
+    while(i < validos && flag ==1)
+    {
+        ///y vamos guardando sus datos mientras lo hacemos
+        existeTermino(arbol, arregloPalabras[i], &encontrado);
+        if(!encontrado)
+        {
+            flag = 0;
+        }
+        else
+        {
+            arregloOcurrencias[i] = encontrado->ocurrencias;
+            i++;
+        }
+    }
+
+    ///si las palabras individuales existen, procedemos a ver si son continuas
+    if(flag)
+    {
+        if(validos==1) //si la frase consiste de una sola palabra, usamos la respectiva funcion
+        {
+            printf("La frase consiste de una sola palabra. Estas son sus apariciones:\n\n");
+            nodoT* apariciones;
+            buscarAparicionesEnAlgunosDocs(arbol, arregloPalabras[0], &apariciones);
+            mostrarLista(apariciones);
+        }
+        else
+        {
+            buscarPalabrasContinuas(arregloOcurrencias, validos, apariciones);
+        }
+    }
+    else
+    {
+        printf("La palabra \"%s\" no se encuentra en ningun texto\n", arregloPalabras[i]);
+    }
+}
 /// 5. Buscar la palabra de más frecuencia que aparece en un doc
 
 int sumarApariciones(nodoT* lista,int id)

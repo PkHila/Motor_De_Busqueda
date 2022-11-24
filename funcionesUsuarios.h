@@ -36,10 +36,13 @@ void buscarVariasAparicionesEnXDoc(nodoA* arbol,nodoPalabra* palabras,int id,nod
 int sumarApariciones(nodoT* lista,int id);
 void encontrarPalabraMasFrecuente(nodoA* arbol,int id,char palabra[],int* maxApariciones);
 void buscarPalabraMasFrecuente(nodoA* arbol,int id,nodoT** apariciones);
+void ingresarFrase(char* frase);
+void separarFrase(nodoA * arbol, char* frase, char arregloPalabras[][20], int* validos);
+void buscarPalabrasContinuas(nodoT** arreglo,int validos, nodoT** apariciones);
+void buscarFrase(nodoA* arbol, nodoT** apariciones);
 int Minimo(int a, int b);
 int Levenshtein(char *s1,char *s2);
 void sugerirSimilares(nodoA* arbol,char palabra[]);
-
 void mostrarPalabrasNoEncontradas(nodoPalabra* noEncontradas);
 int mostrarPalabra(Termino temp,nodoT* lista,int avisoImpresion);
 void mostrarDocumento(nodoT* lista,int* docAnt);

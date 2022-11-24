@@ -3,16 +3,15 @@
 #include <string.h>
 #include "motorDeBusqueda.h"
 
-#define DICCIONARIO "diccionario.bin"
-
+#define diccionario "diccionario.bin"
 
 //!-----------------------------------FUNCIONES BASE----------------------------------------------------
 
-nodoT* crearNodoT(Termino dato)
+nodoT* crearNodoT(int idDoc,int pos)
 {
     nodoT* nuevo=(nodoT*)malloc(sizeof(nodoT));
-    nuevo->idDOC=dato.idDOC;
-    nuevo->pos=dato.pos;
+    nuevo->idDOC=idDoc;
+    nuevo->pos=pos;
     nuevo->sig=NULL;
     return nuevo;
 }
@@ -22,7 +21,7 @@ nodoA* crearNodoA(Termino dato)
     nodoA* nuevo=(nodoA*)malloc(sizeof(nodoA));
     strcpy(nuevo->palabra,dato.palabra);
     nuevo->frecuencia=1;
-    nuevo->ocurrencias=crearNodoT(dato);
+    nuevo->ocurrencias=crearNodoT(dato.idDOC,dato.pos);
     nuevo->izq=NULL;
     nuevo->der=NULL;
     return nuevo;
@@ -30,8 +29,8 @@ nodoA* crearNodoA(Termino dato)
 
 void mostrarLista(nodoT* lista)
 {
-    while(lista){
-
+    while(lista)
+    {
         printf("\nId: %d",lista->idDOC);
         printf("\nPos: %d",lista->pos);
 
@@ -43,7 +42,8 @@ void mostrarLista(nodoT* lista)
 
 void mostrarArbol(nodoA* arbol)
 {
-    if(arbol){
+    if(arbol)
+    {
         mostrarArbol(arbol->izq);
         printf("\nPalabra: %s",arbol->palabra);
         printf("\nFrecuencia: %d",arbol->frecuencia);
@@ -57,9 +57,9 @@ void mostrarArbol(nodoA* arbol)
 
 void insertarNuevoTermino(nodoA** arbol,Termino dato)
 {
-     if(*arbol)
+    if(*arbol)
     {
-        if(strcmp(dato.palabra,(*arbol)->palabra)>0)
+        if(strcmpi(dato.palabra,(*arbol)->palabra)>0)
         {
             insertarNuevoTermino(&(*arbol)->der,dato);
         }
@@ -67,32 +67,34 @@ void insertarNuevoTermino(nodoA** arbol,Termino dato)
         {
             insertarNuevoTermino(&(*arbol)->izq,dato);
         }
-    }else{
-
+    }
+    else
+    {
         (*arbol)=crearNodoA(dato);
     }
-
 }
 
-void insertarNuevaOcurrencia(nodoT** lista,Termino dato)//primer criterio de orden ID, segundo POS
+void insertarNuevaOcurrencia(nodoT** lista,int idDoc,int pos)//primer criterio de orden ID, segundo POS
 {
-    nodoT* nuevo=crearNodoT(dato);
+    nodoT* nuevo=crearNodoT(idDoc,pos);
     nodoT* ant,* seg;
 
-    if(*lista){
+    if(*lista)
+    {
 
-        if((*lista)->idDOC > dato.idDOC || ( (*lista)->idDOC == dato.idDOC && (*lista)->pos > dato.pos)){
-
+        if((*lista)->idDOC > idDoc || ( (*lista)->idDOC == idDoc && (*lista)->pos > pos))
+        {
             nuevo->sig=(*lista);
             (*lista)=nuevo;
-
-        }else{
-
+        }
+        else
+        {
             ant=(*lista);
             seg=(*lista)->sig;
 
-            while(seg && ( (seg->idDOC < dato.idDOC) || (seg->idDOC == dato.idDOC && seg->pos < dato.pos) ) ){
 
+            while(seg && ( (seg->idDOC < idDoc) || (seg->idDOC == idDoc && seg->pos < pos) ) )
+            {
                 ant=seg;
                 seg=seg->sig;
             }
@@ -100,6 +102,10 @@ void insertarNuevaOcurrencia(nodoT** lista,Termino dato)//primer criterio de ord
             ant->sig=nuevo;
             nuevo->sig=seg;
         }
+    }
+    else
+    {
+        (*lista)=nuevo;
     }
 }
 
@@ -109,21 +115,28 @@ void insertarTerminoExistente(nodoA** arbol,Termino dato)
     (*arbol)->frecuencia+=1;
 
     //insercion en la lista
-    insertarNuevaOcurrencia(&(*arbol)->ocurrencias,dato);
+    insertarNuevaOcurrencia(&(*arbol)->ocurrencias,dato.idDOC,dato.pos);
 }
 
 void existeTermino(nodoA* arbol,char palabra[],nodoA** encontrado)
 {
-    if(arbol){
+    if(arbol)
+    {
 
-        if(strcmp(arbol->palabra,palabra)!=0){
+        if(strcmpi(arbol->palabra,palabra)!=0)
+        {
 
-            if(strcmp(palabra,arbol->palabra)>0){
+            if(strcmpi(palabra,arbol->palabra)>0)
+            {
                 existeTermino(arbol->der,palabra,encontrado);
-            }else{
+            }
+            else
+            {
                 existeTermino(arbol->izq,palabra,encontrado);
             }
-        }else{
+        }
+        else
+        {
             *encontrado=arbol;
         }
     }
@@ -135,11 +148,14 @@ void cargarTermino(nodoA** arbol,Termino aux)
     nodoA* existencia=NULL;
     existeTermino(*arbol,aux.palabra,&existencia);
 
-    if(existencia){ //si existe se le incrementa frecuencia y ademas agregar un nodo a la lista
+    if(existencia)  //si existe se le incrementa frecuencia y ademas agregar un nodo a la lista
+    {
 
         insertarTerminoExistente(&existencia,aux);
 
-    }else{ //sino se crea un nuevo nodo en el arbol
+    }
+    else   //sino se crea un nuevo nodo en el arbol
+    {
 
         insertarNuevoTermino(arbol,aux);
     }
@@ -148,11 +164,13 @@ void cargarTermino(nodoA** arbol,Termino aux)
 void cargarArbol(nodoA** arbol)
 {
     Termino aux;
-    FILE* arch = fopen(DICCIONARIO,"rb");
+    FILE* arch = fopen(diccionario,"rb");
 
-    if(arch){
+    if(arch)
+    {
 
-        while(fread(&aux,sizeof(Termino),1,arch)>0){
+        while(fread(&aux,sizeof(Termino),1,arch)>0)
+        {
 
             cargarTermino(arbol,aux);
 

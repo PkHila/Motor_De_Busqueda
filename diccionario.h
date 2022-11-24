@@ -1,8 +1,6 @@
 #ifndef DICCIONARIO_H_INCLUDED
 #define DICCIONARIO_H_INCLUDED
 
-#define CANT_TEXTOS 10
-
 typedef struct
 {
 

@@ -1,8 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
-#include "diccionario.h"
 #include "funcionesUsuarios.h"
 
 #include "motorDeBusqueda.h"
@@ -22,8 +20,7 @@ nodoId* crearNodoId(int dato)
 //?
 void mostrarListaId(nodoId* lista)
 {
-    while(lista)
-    {
+    while(lista){
         printf("\n%d ",lista->id);
         lista=lista->sig;
     }
@@ -272,164 +269,6 @@ void buscarVariasAparicionesEnXDoc(nodoA* arbol,nodoPalabra* palabras,int id,nod
 
 /// 4. Buscar una frase completa (las palabras deben estar contiguas en alguno de los documentos).
 
-void ingresarFrase(char* frase)
-{
-    printf("Ingrese la frase a buscar\n");
-    fflush(stdin);
-    gets(frase);
-}
-
-void separarFrase(nodoA * arbol, char* frase, char arregloPalabras[][20], int* validos)
-{
-    int indiceFrase = 0;
-    int indicePalabra = 0;
-    int indiceValidos = 0;
-    while(indiceFrase < strlen(frase) && frase[indiceFrase]!='\0')
-    {
-        if(caracterValido(frase[indiceFrase])==1)
-        {
-            arregloPalabras[indiceValidos][indicePalabra] = frase[indiceFrase];
-            indicePalabra++;
-        }
-        else
-        {
-            if(indicePalabra>0)
-            {
-                indicePalabra = 0;
-                indiceValidos++;
-            }
-        }
-        indiceFrase++;
-    }
-
-    if(indicePalabra>0)
-    {
-        indiceValidos++;
-    }
-    *validos = indiceValidos;
-
-}
-
-void buscarPalabrasContinuas(nodoA** arregloNodosA,int validos)
-{
-    int i = 1; //indice de validos
-    int continuo = 0;
-
-    ///if(i==1) = se llama a buscar un termino en todos los textos
-    while(i < validos && arregloNodosA[0])
-    {
-        while(arregloNodosA[0]->ocurrencias->idDOC >= arregloNodosA[i]->ocurrencias->idDOC) //recorre mientras que el id de la comparacion sea menor o igual
-        {
-            if(arregloNodosA[0]->ocurrencias->idDOC == arregloNodosA[i]->ocurrencias->idDOC)
-            {
-                if(arregloNodosA[0]->ocurrencias->pos+i == arregloNodosA[i]->ocurrencias->pos)
-                {
-                    if(i+1<validos) //si el sig indice está dentro de validos
-                    {
-                        i++;
-                        continuo = 1;
-                    }
-                    else
-                    {
-                        printf("La frase se encontro en el texto %i, en la pos %i\n\n", arregloNodosA[0]->ocurrencias->idDOC, arregloNodosA[0]->ocurrencias->pos);
-                        arregloNodosA[0]->ocurrencias = arregloNodosA[0]->ocurrencias->sig;
-                        i = 1;
-                    }
-
-                }
-            }
-
-            if(continuo == 0)
-            {
-                arregloNodosA[i]->ocurrencias = arregloNodosA[i]->ocurrencias->sig;
-            }
-            else
-            {
-                continuo = 0;
-            }
-
-
-        }
-        arregloNodosA[0]->ocurrencias = arregloNodosA[0]->ocurrencias->sig;
-        i = 1;
-
-    }
-
-
-
-
-    /*nodoT* segPrimero =arregloNodosA[0]->ocurrencias;
-    nodoT* segComparacion = NULL;
-    int i = 1; //indice de validos
-    while(i < validos && segPrimero)
-    {
-            segComparacion = arregloNodosA[i]->ocurrencias;
-            while(segComparacion && segComparacion->idDOC <= segPrimero->idDOC) //recorre mientras que el id de la comparacion sea menor o igual
-            {
-                if(segComparacion->idDOC == segPrimero->idDOC)
-                {
-                    if(segPrimero->pos == (segComparacion->pos)+1);
-                    {
-
-
-
-                    }
-                }
-                segComparacion = segComparacion->sig;
-            }
-            segPrimero = segPrimero->sig;
-
-    }*/
-}
-
-
-void buscarFrase(nodoA* arbol)
-{
-    ///El usuario ingresa la frase
-    char fraseBusqueda[100] = {0};
-    ingresarFrase(fraseBusqueda);
-
-    ///Se separa la frase en palabras
-    char arregloPalabras[20][20] = {0};
-    int validos = 0;
-    separarFrase(arbol, fraseBusqueda, arregloPalabras,&validos);
-
-    ///Comprobamos que las palabras existan
-    nodoA* encontrado[validos];
-    for(int inic = 0; inic<validos;inic++)
-    {
-        encontrado[inic]= NULL;
-    }
-    int i = 0;
-    int flag = 1;
-    while(i < validos && flag ==1)
-    {
-        ///y vamos guardando sus datos mientras lo hacemos
-        existeTermino(arbol, arregloPalabras[i], &encontrado[i]);
-        if(!encontrado[i])
-        {
-            flag = 0;
-            buscarPalabrasContinuas(encontrado, validos);
-        }
-        else
-        {
-            i++;
-        }
-    }
-
-    ///si las palabras individuales existen, procedemos a ver si son continuas
-    if(flag)
-    {
-        buscarPalabrasContinuas(encontrado, validos);
-
-    }
-    else
-    {
-        printf("La palabra \"%s\" no se encuentra en ningun texto\n", arregloPalabras[i]);
-    }
-}
-
-
 /// 5. Buscar la palabra de mÃ¡s frecuencia que aparece en un doc
 
 int sumarApariciones(nodoT* lista,int id)
@@ -494,30 +333,23 @@ void buscarPalabraMasFrecuente(nodoA* arbol,int id,nodoT** apariciones)
 
 void mostrarPalabra(Termino temp,nodoT* lista)
 {
-    if(lista)
-    {
+    if(lista){
 
-        while(lista && lista->idDOC < temp.idDOC)
-        {
+        while(lista && lista->idDOC < temp.idDOC){
 
             lista=lista->sig;
         }
 
-        if(lista && lista->idDOC == temp.idDOC)
-        {
+        if(lista && lista->idDOC == temp.idDOC){
 
-            while(lista && lista->idDOC == temp.idDOC && lista->pos < temp.pos)
-            {
+            while(lista && lista->idDOC == temp.idDOC && lista->pos < temp.pos){
                 lista=lista->sig;
             }
 
-            if(lista && lista->idDOC == temp.idDOC && lista->pos == temp.pos)
-            {
+            if(lista && lista->idDOC == temp.idDOC && lista->pos == temp.pos){
                 printf("<< %s >> ",temp.palabra);
 
-            }
-            else
-            {
+            }else{
                 printf("%s ",temp.palabra);
             }
 
@@ -538,11 +370,10 @@ void mostrarDocumento(nodoT* lista)
             mostrarPalabra(temp,lista);
             i+=1;
 
-            if(i==13)
-            {
-                printf("\n");
-                i=0;
-            }
+             if(i==13){
+                 printf("\n");
+                 i=0;
+             }
         }
 
         fclose(arch);

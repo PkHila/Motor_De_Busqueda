@@ -22,9 +22,6 @@ int main()
     //USUARIO
     nodoT* apariciones=NULL;
 
-    buscarFrase(arbol);
-
-    /*
     printf("\t ---------------------------------------------\n");
     printf("\t|             BUSQUEDA EN ALGUNOS             |\n");
     printf("\t ---------------------------------------------\n");
@@ -39,7 +36,7 @@ int main()
     mostrarDocumento(apariciones);
 
 
-    printf("\t ---------------------------------------------\n");
+   /* printf("\t ---------------------------------------------\n");
     printf("\t|              BUSQUEDA EN TODOS              |\n");
     printf("\t ---------------------------------------------\n");
 

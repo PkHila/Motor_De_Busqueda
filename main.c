@@ -22,16 +22,7 @@ int main()
 
     //USUARIO
     nodoT* apariciones=NULL;
-
-    buscarAparicionesEnAlgunosDocs(arbol,"Diego",&apariciones);
-    mostrarLista(apariciones);
-
-    //buscarFrase(arbol);
-
-    apariciones = NULL;
-    buscarAparicionesEnAlgunosDocs(arbol,"Diego",&apariciones);
-    mostrarLista(apariciones);
-    printf("\nnooooooooo\n");
+    buscarFrase(arbol);
 
     /*
     printf("\t ---------------------------------------------\n");

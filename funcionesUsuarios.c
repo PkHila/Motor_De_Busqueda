@@ -310,19 +310,18 @@ void separarFrase(nodoA * arbol, char* frase, char arregloPalabras[][20], int* v
 
 }
 
-void buscarPalabrasContinuas(nodoA** arregloNodosA,int validos)
+void buscarPalabrasContinuas(nodoT** arreglo,int validos)
 {
     int i = 1; //indice de validos
     int continuo = 0;
 
-    while(arregloNodosA[0]->ocurrencias && arregloNodosA[i]->ocurrencias)
+    while(arreglo[0])
     {
-        while(arregloNodosA[0]->ocurrencias && arregloNodosA[i]->ocurrencias && arregloNodosA[0]->ocurrencias->idDOC >= arregloNodosA[i]->ocurrencias->idDOC) //recorre mientras que el id de la comparacion sea menor o igual
+        while(arreglo[0] && arreglo[i] && arreglo[0]->idDOC >= arreglo[i]->idDOC) //recorre mientras que el id de la comparacion sea menor o igual
         {
-            if(arregloNodosA[0]->ocurrencias->idDOC == arregloNodosA[i]->ocurrencias->idDOC)
+            if(arreglo[0]->idDOC == arreglo[i]->idDOC)
             {
-
-                    if(arregloNodosA[0]->ocurrencias->pos+i == arregloNodosA[i]->ocurrencias->pos)
+                    if(arreglo[0]->pos+i == arreglo[i]->pos)
                     {
                         if(i+1<validos) //si el sig indice está dentro de validos
                         {
@@ -331,17 +330,17 @@ void buscarPalabrasContinuas(nodoA** arregloNodosA,int validos)
                         }
                         else
                         {
-                            printf("La frase se encontro en el texto %i, en la pos %i\n\n", arregloNodosA[0]->ocurrencias->idDOC, arregloNodosA[0]->ocurrencias->pos);
-                            arregloNodosA[0]->ocurrencias = arregloNodosA[0]->ocurrencias->sig;
+                            printf("La frase se encontro en el texto %i, en la pos %i\n\n", arreglo[0]->idDOC, arreglo[0]->pos);
+                            arreglo[0] = arreglo[0]->sig;
                             i = 1;
                         }
                     }
             }
-            if(arregloNodosA[i]->ocurrencias)
+            if(arreglo[i])
             {
                 if(continuo == 0)
                 {
-                    arregloNodosA[i]->ocurrencias = arregloNodosA[i]->ocurrencias->sig;
+                    arreglo[i] = arreglo[i]->sig;
                 }
                 else
                 {
@@ -349,8 +348,8 @@ void buscarPalabrasContinuas(nodoA** arregloNodosA,int validos)
                 }
             }
         }
-        if(arregloNodosA[0]->ocurrencias)
-        arregloNodosA[0]->ocurrencias = arregloNodosA[0]->ocurrencias->sig;
+        if(arreglo[0])
+        arreglo[0] = arreglo[0]->sig;
         i = 1;
 
     }
@@ -369,24 +368,21 @@ void buscarFrase(nodoA* arbol)
     separarFrase(arbol, fraseBusqueda, arregloPalabras,&validos);
 
     ///Comprobamos que las palabras existan
-    nodoA* encontrado[validos];
-    for(int inic = 0; inic<validos; inic++)
-    {
-        encontrado[inic]= NULL;
-    }
+    nodoA* encontrado = NULL;
+    nodoT* arregloOcurrencias[validos];
     int i = 0;
     int flag = 1;
     while(i < validos && flag ==1)
     {
         ///y vamos guardando sus datos mientras lo hacemos
-        existeTermino(arbol, arregloPalabras[i], &encontrado[i]);
-        if(!encontrado[i])
+        existeTermino(arbol, arregloPalabras[i], &encontrado);
+        if(!encontrado)
         {
             flag = 0;
-            buscarPalabrasContinuas(encontrado, validos);
         }
         else
         {
+            arregloOcurrencias[i] = encontrado->ocurrencias;
             i++;
         }
     }
@@ -394,13 +390,16 @@ void buscarFrase(nodoA* arbol)
     ///si las palabras individuales existen, procedemos a ver si son continuas
     if(flag)
     {
-        if(validos==1)
+        if(validos==1) //si la frase consiste de una sola palabra, usamos la respectiva funcion
         {
-            buscarAparicionesEnAlgunosDocs;
+            printf("La frase consiste de una sola palabra. Estas son sus apariciones:\n\n");
+            nodoT* apariciones;
+            buscarAparicionesEnAlgunosDocs(arbol, arregloPalabras[0], &apariciones);
+            mostrarLista(apariciones);
         }
         else
         {
-            buscarPalabrasContinuas(encontrado, validos);
+            buscarPalabrasContinuas(arregloOcurrencias, validos);
         }
     }
     else

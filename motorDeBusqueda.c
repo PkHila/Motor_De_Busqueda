@@ -3,8 +3,6 @@
 #include <string.h>
 #include "motorDeBusqueda.h"
 
-#define diccionario "diccionario.bin"
-
 //!-----------------------------------FUNCIONES BASE----------------------------------------------------
 
 nodoT* crearNodoT(int idDoc,int pos)
@@ -19,7 +17,6 @@ nodoT* crearNodoT(int idDoc,int pos)
 nodoA* crearNodoA(Termino dato)
 {
     nodoA* nuevo=(nodoA*)malloc(sizeof(nodoA));
-    memset(nuevo->palabra,0,20);
     strcpy(nuevo->palabra,dato.palabra);
     nuevo->frecuencia=1;
     nuevo->ocurrencias=crearNodoT(dato.idDOC,dato.pos);

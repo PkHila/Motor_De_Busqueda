@@ -1,13 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
-#include "diccionario.h"
 #include "funcionesUsuarios.h"
 
-#include "motorDeBusqueda.h"
 
-#define diccionario "diccionario.bin"
 
 //!-----------------------------------FUNCIONES BASE----------------------------------------------------
 
@@ -19,7 +15,6 @@ nodoId* crearNodoId(int dato)
     return nuevo;
 }
 
-//?
 void mostrarListaId(nodoId* lista)
 {
     while(lista)
@@ -28,7 +23,6 @@ void mostrarListaId(nodoId* lista)
         lista=lista->sig;
     }
 }
-//?
 
 nodoPalabra* crearNodoPalabra(char dato[20])
 {
@@ -48,6 +42,19 @@ void mostrarListaPlabras(nodoPalabra* lista)
 }
 
 //!-----------------------------------FUNCIONES CARGA DE DATOS----------------------------------------------------
+
+int cargarPalabra(nodoA* arbol,char palabra[])
+{
+    int verificacion=0;
+
+    printf("\nIngrese la palabra que desea buscar: ");
+    fflush(stdin);
+    gets(palabra);
+
+    verificacion=verificarPalabra(arbol,palabra);
+
+    return verificacion;
+}
 
 void insertarId(nodoId** lista,int dato)//orden ascendente
 {
@@ -87,8 +94,9 @@ void insertarId(nodoId** lista,int dato)//orden ascendente
     }
 }
 
-void cargarIds(nodoId** lista)
+int cargarIds(nodoId** lista)
 {
+    int verificacion=1;
     int id=0;
     char control='s';
 
@@ -98,16 +106,22 @@ void cargarIds(nodoId** lista)
         fflush(stdin);
         scanf("%d",&id);
 
-        //!VERIFICACION DE ID VALIDO //! HILA CANT_TEXTOS LIBRERIA DICCIONARIO
+        if(id <= CANT_TEXTOS)
+        {
+            insertarId(lista,id);
 
-        insertarId(lista,id);
+        }
+        else
+        {
+
+            verificacion=0;
+        }
 
         printf("\nCargar otro id? s/n: ");
         fflush(stdin);
         scanf("%c",&control);
-
-        system("cls");
     }
+    return verificacion;
 }
 
 void insertarPalabra(nodoPalabra** lista,char palabra[])
@@ -144,7 +158,7 @@ int verificarPalabra(nodoA* arbol,char palabra[])
     return encontrado;
 }
 
-void cargarPalabras(nodoA* arbol,nodoPalabra** lista)
+void cargarPalabras(nodoA* arbol,nodoPalabra** lista,nodoPalabra** noEncontradas)
 {
     char palabra[20]= {0};
     char control='s';
@@ -152,7 +166,7 @@ void cargarPalabras(nodoA* arbol,nodoPalabra** lista)
 
     while(control=='s')
     {
-        printf("Ingrese la palabra que desea buscar: ");
+        printf("\nIngrese la palabra que desea buscar: ");
         fflush(stdin);
         gets(palabra);
 
@@ -161,20 +175,34 @@ void cargarPalabras(nodoA* arbol,nodoPalabra** lista)
         if(validacion)
         {
             insertarPalabra(lista,palabra);
-
-            printf("\nCargar otra palabra? s/n: ");
-            fflush(stdin);
-            scanf("%c",&control);
-
         }
         else
         {
-            printf("\nPalabra ingresada no valida. Vuelva a ingresar.\n");
-            system("pause");
+            insertarPalabra(noEncontradas,palabra);
         }
 
-        system("cls");
+        printf("\nCargar otra palabra? s/n: ");
+        fflush(stdin);
+        scanf("%c",&control);
     }
+}
+
+int ingresoIdDoc(int* idDoc)
+{
+    int verificacion=0;
+    int idIngresado=0;
+
+    printf("\nIngrese el id donde desea realizar la busqueda: ");
+    fflush(stdin);
+    scanf("%d",&idIngresado);
+
+    if(idIngresado <= CANT_TEXTOS)
+    {
+        *idDoc=idIngresado;
+        verificacion=1;
+    }
+
+    return verificacion;
 }
 
 //!-----------------------------------FUNCIONES DE BUSQUEDA----------------------------------------------------
@@ -187,7 +215,7 @@ void buscarAparicionesEnAlgunosDocs(nodoA* arbol,char palabra[20],nodoT** aparic
     nodoA* palabraEncontrada;
     existeTermino(arbol,palabra,&palabraEncontrada);
 
-    //retorno resultado
+    //retorno la sublista con todas las ocurrencias de la palabra
     (*apariciones)=palabraEncontrada->ocurrencias;
 }
 
@@ -199,7 +227,6 @@ int coincideId(nodoT* lista,int idBuscado,nodoT** apariciones)
 
     if(lista)
     {
-
         while(lista && lista->idDOC < idBuscado)
         {
             lista=lista->sig;
@@ -262,9 +289,9 @@ void buscarVariasAparicionesEnXDoc(nodoA* arbol,nodoPalabra* palabras,int id,nod
     {
         existeTermino(arbol,palabras->palabra,&palabraEncontrada);
 
-        coincide=coincideId(palabraEncontrada->ocurrencias,id,ocurrencias); //filtro de coincidencia
+        coincide=coincideId(palabraEncontrada->ocurrencias,id,ocurrencias);
 
-        //se podria avisar cuales si y cuales no con la var coincide
+        //las palabras que existen pero no estan en ese documento?
 
         palabras=palabras->sig;
     }
@@ -323,7 +350,7 @@ void buscarPalabrasContinuas(nodoT** arreglo,int validos, nodoT** apariciones)
             {
                     if(arreglo[0]->pos+i == arreglo[i]->pos)
                     {
-                        if(i+1<validos) //si el sig indice está dentro de validos
+                        if(i+1<validos) //si el sig indice estï¿½ dentro de validos
                         {
                             i++;
                             continuo = 1;
@@ -407,8 +434,6 @@ void buscarFrase(nodoA* arbol, nodoT** apariciones)
         printf("La palabra \"%s\" no se encuentra en ningun texto\n", arregloPalabras[i]);
     }
 }
-
-
 /// 5. Buscar la palabra de mÃ¡s frecuencia que aparece en un doc
 
 int sumarApariciones(nodoT* lista,int id)
@@ -469,13 +494,86 @@ void buscarPalabraMasFrecuente(nodoA* arbol,int id,nodoT** apariciones)
 
 /// 6. Utilizar la distancia de levenshtein en el ingreso de una palabra y sugerir similares a partir de una distancia <= 3.
 
+int Minimo(int a, int b)
+{
+    if(a < b) return a;
+    return b;
+}
+
+int Levenshtein(char *s1,char *s2)
+{
+    int t1,t2,i,j,*m,costo,res,ancho;
+
+// Calcula tamanios strings
+    t1=strlen(s1);
+    t2=strlen(s2);
+
+// Verifica que exista algo que comparar
+    if (t1==0) return(t2);
+    if (t2==0) return(t1);
+    ancho=t1+1;
+
+// Reserva matriz con malloc                     m[i,j] = m[j*ancho+i] !!
+    m=(int*)malloc(sizeof(int)*(t1+1)*(t2+1));
+    if (m==NULL) return(-1); // ERROR!!
+
+// Rellena primera fila y primera columna
+    for (i=0; i<=t1; i++) m[i]=i;
+    for (j=0; j<=t2; j++) m[j*ancho]=j;
+
+// Recorremos resto de la matriz llenando pesos
+    for (i=1; i<=t1; i++) for (j=1; j<=t2; j++)
+        {
+            if (s1[i-1]==s2[j-1]) costo=0;
+            else costo=1;
+            m[j*ancho+i]=Minimo(Minimo(m[j*ancho+i-1]+1,     // Eliminacion
+                                       m[(j-1)*ancho+i]+1),              // Insercion
+                                m[(j-1)*ancho+i-1]+costo);
+        }      // Sustitucion
+
+// Devolvemos esquina final de la matriz
+    res=m[t2*ancho+t1];
+    free(m);
+    return(res);
+}
+
+void sugerirSimilares(nodoA* arbol,char palabra[])
+{
+    if(arbol){
+
+        int dist=Levenshtein(arbol->palabra,palabra);
+
+        if(dist <= 3){
+            printf("\n- %s",arbol->palabra);
+        }
+
+        sugerirSimilares(arbol->izq,palabra);
+        sugerirSimilares(arbol->der,palabra);
+    }
+}
+
 //!-----------------------------------FUNCIONES DE MOSTRAR RESULTADOS----------------------------------------------------
 
-void mostrarPalabra(Termino temp,nodoT* lista)
+void mostrarPalabrasNoEncontradas(nodoPalabra* lista)
 {
     if(lista)
     {
+        printf("\nPalabras no encontradas en ningun documento: \n");
 
+        while(lista)
+        {
+            printf("- %s\n",lista->palabra);
+            lista=lista->sig;
+        }
+    }
+}
+
+int mostrarPalabra(Termino temp,nodoT* lista,int avisoImpresion)
+{
+    int flag=0;
+
+    if(lista)
+    {
         while(lista && lista->idDOC < temp.idDOC)
         {
 
@@ -490,9 +588,15 @@ void mostrarPalabra(Termino temp,nodoT* lista)
                 lista=lista->sig;
             }
 
+            flag=1;
+            if(avisoImpresion)
+            {
+                printf("\n\n\t\t-------------DOC %d---------------\n\n",temp.idDOC);
+            }
+
             if(lista && lista->idDOC == temp.idDOC && lista->pos == temp.pos)
             {
-                printf("<< %s >> ",temp.palabra);
+                printf("<<  %s  >> ",temp.palabra);
 
             }
             else
@@ -502,29 +606,49 @@ void mostrarPalabra(Termino temp,nodoT* lista)
 
         }
     }
+
+    return flag;
 }
 
-void mostrarDocumento(nodoT* lista)
+void mostrarDocumento(nodoT* lista,int* docAnt)
 {
     int i=0;
+    int flag=0;
+    int avisoImpresion=0;
     Termino temp;
-    FILE* arch=fopen(diccionario,"rb");
 
-    if(arch)
+    if(lista)
     {
-        while(fread(&temp,sizeof(Termino),1,arch)>0)
+        FILE* arch=fopen(diccionario,"rb");
+
+        if(arch)
         {
-            mostrarPalabra(temp,lista);
-            i+=1;
-
-            if(i==13)
+            while(fread(&temp,sizeof(Termino),1,arch)>0)
             {
-                printf("\n");
-                i=0;
+                if(temp.idDOC != *docAnt)
+                {
+                    avisoImpresion=1;
+
+                    *docAnt=temp.idDOC;
+                }
+
+                flag=mostrarPalabra(temp,lista,avisoImpresion);
+                avisoImpresion=0;
+
+                if(flag)
+                {
+                    i+=1;
+                }
+
+                if(i==13)
+                {
+                    printf("\n");
+                    i=0;
+                }
             }
+
+            fclose(arch);
         }
-
-        fclose(arch);
     }
+    printf("\n\n");
 }
-

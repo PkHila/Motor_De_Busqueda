@@ -3,7 +3,6 @@
 #include <string.h>
 #include "diccionario.h"
 
-#define DICCIONARIO "diccionario.bin"
 
 
 

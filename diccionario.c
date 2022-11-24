@@ -3,8 +3,7 @@
 #include <string.h>
 #include "diccionario.h"
 
-#define DICCIONARIO "diccionario.bin"
-#define CANT_TEXTOS 10
+
 
 
 termino crearTermino(char palabra[20], int idDocumento, int pos)

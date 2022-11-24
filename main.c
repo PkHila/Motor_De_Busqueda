@@ -36,7 +36,6 @@ int main()
     mostrarDocumento(apariciones);
 
 
-
    /* printf("\t ---------------------------------------------\n");
     printf("\t|              BUSQUEDA EN TODOS              |\n");
     printf("\t ---------------------------------------------\n");

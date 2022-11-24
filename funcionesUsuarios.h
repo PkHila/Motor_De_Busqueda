@@ -35,5 +35,9 @@ void encontrarPalabraMasFrecuente(nodoA* arbol,int id,char palabra[],int* maxApa
 void buscarPalabraMasFrecuente(nodoA* arbol,int id,nodoT** apariciones);
 void mostrarPalabra(Termino temp,nodoT* lista);
 void mostrarDocumento(nodoT* lista);
+void ingresarFrase(char* frase);
+void separarFrase(nodoA * arbol, char* frase, char arregloPalabras[][20], int* validos);
+void buscarPalabrasContinuas(nodoA** arregloNodosA,int validos);
+void buscarFrase(nodoA* arbol);
 
 #endif // FUNCIONESUSUARIOS_H_INCLUDED

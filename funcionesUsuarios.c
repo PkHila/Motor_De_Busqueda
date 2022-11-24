@@ -315,45 +315,71 @@ void buscarPalabrasContinuas(nodoA** arregloNodosA,int validos)
     int i = 1; //indice de validos
     int continuo = 0;
 
-    while(arregloNodosA[0]->ocurrencias && arregloNodosA[i]->ocurrencias)
+    ///if(i==1) = se llama a buscar un termino en todos los textos
+    while(i < validos && arregloNodosA[0])
     {
-        while(arregloNodosA[0]->ocurrencias && arregloNodosA[i]->ocurrencias && arregloNodosA[0]->ocurrencias->idDOC >= arregloNodosA[i]->ocurrencias->idDOC) //recorre mientras que el id de la comparacion sea menor o igual
+        while(arregloNodosA[0]->ocurrencias->idDOC >= arregloNodosA[i]->ocurrencias->idDOC) //recorre mientras que el id de la comparacion sea menor o igual
         {
             if(arregloNodosA[0]->ocurrencias->idDOC == arregloNodosA[i]->ocurrencias->idDOC)
             {
-
-                    if(arregloNodosA[0]->ocurrencias->pos+i == arregloNodosA[i]->ocurrencias->pos)
+                if(arregloNodosA[0]->ocurrencias->pos+i == arregloNodosA[i]->ocurrencias->pos)
+                {
+                    if(i+1<validos) //si el sig indice está dentro de validos
                     {
-                        if(i+1<validos) //si el sig indice está dentro de validos
-                        {
-                            i++;
-                            continuo = 1;
-                        }
-                        else
-                        {
-                            printf("La frase se encontro en el texto %i, en la pos %i\n\n", arregloNodosA[0]->ocurrencias->idDOC, arregloNodosA[0]->ocurrencias->pos);
-                            arregloNodosA[0]->ocurrencias = arregloNodosA[0]->ocurrencias->sig;
-                            i = 1;
-                        }
+                        i++;
+                        continuo = 1;
                     }
+                    else
+                    {
+                        printf("La frase se encontro en el texto %i, en la pos %i\n\n", arregloNodosA[0]->ocurrencias->idDOC, arregloNodosA[0]->ocurrencias->pos);
+                        arregloNodosA[0]->ocurrencias = arregloNodosA[0]->ocurrencias->sig;
+                        i = 1;
+                    }
+
+                }
             }
-            if(arregloNodosA[i]->ocurrencias)
+
+            if(continuo == 0)
             {
-                if(continuo == 0)
-                {
-                    arregloNodosA[i]->ocurrencias = arregloNodosA[i]->ocurrencias->sig;
-                }
-                else
-                {
-                    continuo = 0;
-                }
+                arregloNodosA[i]->ocurrencias = arregloNodosA[i]->ocurrencias->sig;
             }
+            else
+            {
+                continuo = 0;
+            }
+
+
         }
-        if(arregloNodosA[0]->ocurrencias)
         arregloNodosA[0]->ocurrencias = arregloNodosA[0]->ocurrencias->sig;
         i = 1;
 
     }
+
+
+
+
+    /*nodoT* segPrimero =arregloNodosA[0]->ocurrencias;
+    nodoT* segComparacion = NULL;
+    int i = 1; //indice de validos
+    while(i < validos && segPrimero)
+    {
+            segComparacion = arregloNodosA[i]->ocurrencias;
+            while(segComparacion && segComparacion->idDOC <= segPrimero->idDOC) //recorre mientras que el id de la comparacion sea menor o igual
+            {
+                if(segComparacion->idDOC == segPrimero->idDOC)
+                {
+                    if(segPrimero->pos == (segComparacion->pos)+1);
+                    {
+
+
+
+                    }
+                }
+                segComparacion = segComparacion->sig;
+            }
+            segPrimero = segPrimero->sig;
+
+    }*/
 }
 
 
@@ -370,7 +396,7 @@ void buscarFrase(nodoA* arbol)
 
     ///Comprobamos que las palabras existan
     nodoA* encontrado[validos];
-    for(int inic = 0; inic<validos; inic++)
+    for(int inic = 0; inic<validos;inic++)
     {
         encontrado[inic]= NULL;
     }
@@ -394,14 +420,8 @@ void buscarFrase(nodoA* arbol)
     ///si las palabras individuales existen, procedemos a ver si son continuas
     if(flag)
     {
-        if(validos==1)
-        {
-            buscarAparicionesEnAlgunosDocs;
-        }
-        else
-        {
-            buscarPalabrasContinuas(encontrado, validos);
-        }
+        buscarPalabrasContinuas(encontrado, validos);
+
     }
     else
     {

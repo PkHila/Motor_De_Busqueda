@@ -142,7 +142,11 @@ int main()
             break;
 
         case 4:
-            printf("caso 4\n");
+            printf("\t ---------------------------------------------\n");
+            printf("\t|         BUSQUEDA DE FRASE COMPLETA          |\n");
+            printf("\t ---------------------------------------------\n");
+
+            buscarFrase(arbol, &apariciones);
 
             break;
 

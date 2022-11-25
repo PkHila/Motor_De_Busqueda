@@ -269,7 +269,7 @@ int buscarAparicionesEnTodosDocs(nodoA* arbol,char palabra[],nodoId* idBuscado,n
 
     if(coincide)
     {
-        (*apariciones)=aux;
+        (*apariciones)=aux; //una vez que se encontraron todas asigna la lista de ocurrencias
         return 1;
     }
     else
@@ -285,13 +285,13 @@ void buscarVariasAparicionesEnXDoc(nodoA* arbol,nodoPalabra* palabras,int id,nod
     int coincide=0;
     nodoA* palabraEncontrada;
 
-    while(palabras)
+    while(palabras) //recorre todas las palabras ingresadas
     {
+        //encuentra la palabra en el arbol
         existeTermino(arbol,palabras->palabra,&palabraEncontrada);
 
+        //si coincide el id la carga en la lista de ocurrencias
         coincide=coincideId(palabraEncontrada->ocurrencias,id,ocurrencias);
-
-        //las palabras que existen pero no estan en ese documento?
 
         palabras=palabras->sig;
     }
@@ -307,7 +307,6 @@ int sumarApariciones(nodoT* lista,int id)
 
     if(lista)
     {
-
         while(lista && lista->idDOC < id)
         {
             lista=lista->sig;
@@ -329,7 +328,6 @@ void encontrarPalabraMasFrecuente(nodoA* arbol,int id,char palabra[],int* maxApa
 
     if(arbol)
     {
-
         cant=sumarApariciones(arbol->ocurrencias,id);
 
         if(cant > *maxApariciones)
@@ -350,10 +348,13 @@ void buscarPalabraMasFrecuente(nodoA* arbol,int id,nodoT** apariciones)
     int maxApariciones=-1;
     int coincide=0;
 
+    //encuentra la palabra que mas se repite
     encontrarPalabraMasFrecuente(arbol,id,palabra,&maxApariciones);
 
+    //devuelve la lista de ocurrencias de esa palabra
     existeTermino(arbol,palabra,&palabraEncontrada);
 
+    //aplica un filtro, guarda las que estan en ese id
     coincide=coincideId(palabraEncontrada->ocurrencias,id,apariciones);
 }
 
@@ -423,11 +424,12 @@ void mostrarPalabrasNoEncontradas(nodoPalabra* lista)
 {
     if(lista)
     {
-        printf("\nPalabras no encontradas en ningun documento: \n");
+        printf("\n\t     Palabras no encontradas en ningun documento\n");
+        printf("______________________________________________________________________\n\n");
 
         while(lista)
         {
-            printf("- %s\n",lista->palabra);
+            printf("\t- %s\n",lista->palabra);
             lista=lista->sig;
         }
     }

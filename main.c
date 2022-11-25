@@ -6,9 +6,21 @@
 #include "motorDeBusqueda.h"
 #include "funcionesUsuarios.h"
 
+void dibujarLogo()
+{
+    char logo[735] = {0};
+    FILE * arch = fopen("logo.txt", "r");
+    if(arch)
+    {
+        fread(&logo,735,1,arch);
+        printf("%s \n", logo);
+    }
+    fclose(arch);
+}
+
 void menu()
 {
-    printf("Inserte logo aqui\n");
+    dibujarLogo();
 
     printf("\n1. Busqueda de un termino en algunos documentos");
     printf("\n2. Busqueda de un termino en todos los documentos");

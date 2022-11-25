@@ -35,27 +35,6 @@ void menu()
 
 int main()
 {
-    //!opcion 1
-    nodoT* apariciones=NULL;
-    char palabra[20]= {0};
-    int verificacion=0;
-    //!opcion 2
-    int aparicionEnTodos=0;
-    nodoId* listaId=NULL;
-    //char palabra[20]= {0};
-    //!opcion 3
-    nodoPalabra* palabras=NULL;
-    nodoPalabra* noEncontradas=NULL;
-    int id=0;
-    //!opcion 4
-
-    //!opcion 5
-    //int id=0;
-    //!opcion 6
-
-    //ayuda  a mostrar los docs
-    int docAnt=0;
-
     int comando = -1;
 
     //DICCIONARIO
@@ -68,6 +47,27 @@ int main()
     //MENU
     while(comando!=0)
     {
+        //!opcion 1
+        nodoT* apariciones=NULL;
+        char palabra[20]= {0};
+        int verificacion=0;
+        //!opcion 2
+        int aparicionEnTodos=0;
+        nodoId* listaId=NULL;
+        //char palabra[20]= {0};
+        //!opcion 3
+        nodoPalabra* palabras=NULL;
+        nodoPalabra* noEncontradas=NULL;
+        int id=0;
+        //!opcion 4
+
+        //!opcion 5
+        //int id=0;
+        //!opcion 6
+
+        //ayuda  a mostrar los docs
+        int docAnt=0;
+
         menu();
         fflush(stdin);
         scanf("%i",&comando);
@@ -188,9 +188,12 @@ int main()
 
             verificacion=cargarPalabra(arbol,palabra);
 
-            if(verificacion){
+            if(verificacion)
+            {
                 printf("\nLa palabra ingresada ya existe.\n");
-            }else{
+            }
+            else
+            {
                 sugerirSimilares(arbol,palabra);
             }
 
@@ -198,7 +201,6 @@ int main()
         }
 
         mostrarDocumento(apariciones,&docAnt);
-
         system("pause");
         system("cls");
     }

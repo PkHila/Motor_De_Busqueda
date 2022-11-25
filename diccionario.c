@@ -71,13 +71,15 @@ void separarPalabras(char* textoCompleto, int idDocumento)
     free(palabra);
 }
 
-char* generarNombreArchivo(int idDocumento)
+char* generarNombreArchivo(int idDocumento) //crea el nombre del archivo en base a el id de documento
 {
     char *nombreArch = (char*) calloc(20, sizeof(char));
     char idString[2];
     char cabecera[20] = "texto";
     char* extension = ".txt";
-    sprintf(idString, "%i", idDocumento);
+    sprintf(idString, "%i", idDocumento); //convierte el entero en string para ser concatenado
+
+    //concatena todas las strings
     strcat(cabecera, idString);
     strcat(cabecera, extension);
     strcpy(nombreArch, cabecera);
@@ -104,12 +106,12 @@ void crearNuevoDiccionario()
 void cargarDiccionario()
 {
     FILE* arch = fopen(DICCIONARIO,"rb");
-    if(!arch)
+    if(!arch)   //si el diccionario no existe todaviam se creara
     {
         fclose(arch);
         crearNuevoDiccionario();
     }
-    else
+    else //si ya existe no hay por que crearlo
     {
         fclose(arch);
     }

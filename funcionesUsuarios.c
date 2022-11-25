@@ -311,25 +311,25 @@ void separarFrase(nodoA * arbol, char* frase, char arregloPalabras[][20], int* v
     int indiceFrase = 0;
     int indicePalabra = 0;
     int indiceValidos = 0;
-    while(indiceFrase < strlen(frase) && frase[indiceFrase]!='\0')
+    while(indiceFrase < strlen(frase) && frase[indiceFrase]!='\0') //mietras no llegue al final de la frase
     {
-        if(caracterValido(frase[indiceFrase])==1)
+        if(caracterValido(frase[indiceFrase])==1) //si es un caracter valido
         {
-            arregloPalabras[indiceValidos][indicePalabra] = frase[indiceFrase];
+            arregloPalabras[indiceValidos][indicePalabra] = frase[indiceFrase]; //se introduce en el arreglo de palabras
             indicePalabra++;
         }
         else
         {
-            if(indicePalabra>0)
+            if(indicePalabra>0) //significa que se guardo una palabra
             {
-                indicePalabra = 0;
-                indiceValidos++;
+                indicePalabra = 0; //entonces se reinicia el contador de chars por palabra
+                indiceValidos++; //y se aumenta validos para pasar potencialmente a la sig palabra en la frase
             }
         }
         indiceFrase++;
     }
 
-    if(indicePalabra>0)
+    if(indicePalabra>0) //revisa una vez más en caso de que haya terminado por encontrarse con un \0
     {
         indiceValidos++;
     }
@@ -339,41 +339,41 @@ void separarFrase(nodoA * arbol, char* frase, char arregloPalabras[][20], int* v
 
 void buscarPalabrasContinuas(nodoT** arreglo,int validos, nodoT** apariciones)
 {
-    int i = 1; //indice de validos
-    int continuo = 0;
+    int i = 1; //indice de palabra a comparar con la primera
+    int continuo = 0; //flag utilizada para saber cuando la comparacion es exitosa
 
-    while(arreglo[0])
+    while(arreglo[0]) //mientras queden ocurrencias de la primera palabra
     {
-        while(arreglo[0] && arreglo[i] && arreglo[0]->idDOC >= arreglo[i]->idDOC) //recorre mientras que el id de la comparacion sea menor o igual
+        //mientras que existan las ocurrencias a comparar y no se pase del ID a comparar en la primera palabra
+        while(arreglo[0] && arreglo[i] && arreglo[0]->idDOC >= arreglo[i]->idDOC)
         {
-            if(arreglo[0]->idDOC == arreglo[i]->idDOC)
+            if(arreglo[0]->idDOC == arreglo[i]->idDOC) //si los ID coinciden
             {
-                    if(arreglo[0]->pos+i == arreglo[i]->pos)
+                    if(arreglo[0]->pos+i == arreglo[i]->pos) //y las posiciones son correctas relativa a la primera palabra
                     {
-                        if(i+1<validos) //si el sig indice est� dentro de validos
+                        if(i+1<validos) //si el sig indice esta dentro de validos
                         {
-                            i++;
-                            continuo = 1;
+                            i++; //paso a la sig palabra a comparar
+                            continuo = 1; //levanto la flag
                         }
-                        else
+                        else //sino significa que la comparacion fue exitosa
                         {
                             insertarNuevaOcurrencia(apariciones,arreglo[0]->idDOC, arreglo[0]->pos);
-                            arreglo[0] = arreglo[0]->sig;
-                            i = 1;
+                            arreglo[0] = arreglo[0]->sig; //no comparo mas con esta ocurrencia
+                            i = 1; //reinicio el indice para la siguiente comparacion
                         }
                     }
             }
-            if(arreglo[i])
-            {
+
                 if(continuo == 0)
                 {
                     arreglo[i] = arreglo[i]->sig;
                 }
-                else
+                else //si la bandera esta alta, es porque el indice se reinicio
                 {
                     continuo = 0;
                 }
-            }
+
         }
         if(arreglo[0])
         arreglo[0] = arreglo[0]->sig;
@@ -385,23 +385,23 @@ void buscarPalabrasContinuas(nodoT** arreglo,int validos, nodoT** apariciones)
 
 void buscarFrase(nodoA* arbol, nodoT** apariciones)
 {
-    ///El usuario ingresa la frase
+    //El usuario ingresa la frase
     char fraseBusqueda[100] = {0};
     ingresarFrase(fraseBusqueda);
 
-    ///Se separa la frase en palabras
+    //Se separa la frase en palabras
     char arregloPalabras[20][20] = {0};
     int validos = 0;
     separarFrase(arbol, fraseBusqueda, arregloPalabras,&validos);
 
-    ///Comprobamos que las palabras existan
+    //Comprobamos que las palabras existan
     nodoA* encontrado = NULL;
     nodoT* arregloOcurrencias[validos];
     int i = 0;
     int flag = 1;
     while(i < validos && flag ==1)
     {
-        ///y vamos guardando sus datos mientras lo hacemos
+        //y vamos guardando sus datos mientras lo hacemos
         existeTermino(arbol, arregloPalabras[i], &encontrado);
         if(!encontrado)
         {
@@ -414,7 +414,7 @@ void buscarFrase(nodoA* arbol, nodoT** apariciones)
         }
     }
 
-    ///si las palabras individuales existen, procedemos a ver si son continuas
+    //si las palabras individuales existen, procedemos a ver si son continuas
     if(flag)
     {
         if(validos==1) //si la frase consiste de una sola palabra, usamos la respectiva funcion
@@ -429,7 +429,7 @@ void buscarFrase(nodoA* arbol, nodoT** apariciones)
             buscarPalabrasContinuas(arregloOcurrencias, validos, apariciones);
         }
     }
-    else
+    else //si no existen
     {
         printf("La palabra \"%s\" no se encuentra en ningun texto\n", arregloPalabras[i]);
     }

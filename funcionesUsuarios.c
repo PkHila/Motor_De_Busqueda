@@ -3,7 +3,23 @@
 #include <string.h>
 #include "funcionesUsuarios.h"
 
-
+#define RESET_COLOR   "\x1b[0m"
+#define NEGRO_T       "\x1b[30m"
+#define NEGRO_F       "\x1b[40m"
+#define ROJO_T        "\x1b[31m"
+#define ROJO_F        "\x1b[41m"
+#define VERDE_T       "\x1b[32m"
+#define VERDE_F       "\x1b[42m"
+#define AMARILLO_T    "\x1b[33m"
+#define AMARILLO_F    "\x1b[43m"
+#define AZUL_T        "\x1b[34m"
+#define AZUL_F        "\x1b[44m"
+#define MAGENTA_T     "\x1b[35m"
+#define MAGENTA_F     "\x1b[45m"
+#define CYAN_T        "\x1b[36m"
+#define CYAN_F        "\x1b[46m"
+#define BLANCO_T      "\x1b[37m"
+#define BLANCO_F      "\x1b[47m"
 
 //!-----------------------------------FUNCIONES BASE----------------------------------------------------
 
@@ -280,7 +296,7 @@ int buscarAparicionesEnTodosDocs(nodoA* arbol,char palabra[],nodoId* idBuscado,n
 
 /// 3)Buscar la aparicion de mas de un termino en el mismo documento.
 
-void buscarVariasAparicionesEnXDoc(nodoA* arbol,nodoPalabra* palabras,int id,nodoT** ocurrencias)
+void buscarVariasAparicionesEnXDoc(nodoA* arbol,nodoPalabra* palabras,int id,nodoT** ocurrencias,nodoPalabra** noEncontradas)
 {
     int coincide=0;
     nodoA* palabraEncontrada;
@@ -292,6 +308,11 @@ void buscarVariasAparicionesEnXDoc(nodoA* arbol,nodoPalabra* palabras,int id,nod
 
         //si coincide el id la carga en la lista de ocurrencias
         coincide=coincideId(palabraEncontrada->ocurrencias,id,ocurrencias);
+
+        if(!coincide){
+
+            insertarPalabra(noEncontradas,palabras->palabra);
+        }
 
         palabras=palabras->sig;
     }
@@ -358,7 +379,10 @@ void buscarPalabrasContinuas(nodoT** arreglo,int validos, nodoT** apariciones)
                         }
                         else //sino significa que la comparacion fue exitosa
                         {
-                            insertarNuevaOcurrencia(apariciones,arreglo[0]->idDOC, arreglo[0]->pos);
+                            for(int j = 0; j < validos; j++)
+                            {
+                                insertarNuevaOcurrencia(apariciones,arreglo[j]->idDOC, arreglo[j]->pos);
+                            }
                             arreglo[0] = arreglo[0]->sig; //no comparo mas con esta ocurrencia
                             i = 1; //reinicio el indice para la siguiente comparacion
                         }
@@ -491,6 +515,8 @@ void buscarPalabraMasFrecuente(nodoA* arbol,int id,nodoT** apariciones)
 
     //aplica un filtro, guarda las que estan en ese id
     coincide=coincideId(palabraEncontrada->ocurrencias,id,apariciones);
+
+    printf("\nTotal de apariciones: %d\n",maxApariciones);
 }
 
 /// 6. Utilizar la distancia de levenshtein en el ingreso de una palabra y sugerir similares a partir de una distancia <= 3.
@@ -559,7 +585,7 @@ void mostrarPalabrasNoEncontradas(nodoPalabra* lista)
 {
     if(lista)
     {
-        printf("\n\t     Palabras no encontradas en ningun documento\n");
+        printf("\n\t\t     Palabras no encontradas  \n");
         printf("______________________________________________________________________\n\n");
 
         while(lista)
@@ -593,12 +619,14 @@ int mostrarPalabra(Termino temp,nodoT* lista,int avisoImpresion)
             flag=1;
             if(avisoImpresion)
             {
-                printf("\n\n\t\t-------------DOC %d---------------\n\n",temp.idDOC);
+                printf("\n\n\t\t");
+                printf(NEGRO_T BLANCO_F"-------------DOC %d---------------"RESET_COLOR,temp.idDOC);
+                printf("\n\n");
             }
 
             if(lista && lista->idDOC == temp.idDOC && lista->pos == temp.pos)
             {
-                printf("<<  %s  >> ",temp.palabra);
+                printf(CYAN_T"%s "RESET_COLOR,temp.palabra);
 
             }
             else

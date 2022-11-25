@@ -32,7 +32,7 @@ int ingresoIdDoc(int* idDoc);
 void buscarAparicionesEnAlgunosDocs(nodoA* arbol,char palabra[20],nodoT** apariciones);
 int coincideId(nodoT* lista,int idBuscado,nodoT** apariciones);
 int buscarAparicionesEnTodosDocs(nodoA* arbol,char palabra[],nodoId* idBuscado,nodoT** apariciones);
-void buscarVariasAparicionesEnXDoc(nodoA* arbol,nodoPalabra* palabras,int id,nodoT** ocurrencias);
+void buscarVariasAparicionesEnXDoc(nodoA* arbol,nodoPalabra* palabras,int id,nodoT** ocurrencias,nodoPalabra** noEncontradas);
 int sumarApariciones(nodoT* lista,int id);
 void encontrarPalabraMasFrecuente(nodoA* arbol,int id,char palabra[],int* maxApariciones);
 void buscarPalabraMasFrecuente(nodoA* arbol,int id,nodoT** apariciones);

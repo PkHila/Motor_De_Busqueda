@@ -35,144 +35,7 @@ void dibujarLogo();
 int menuAnimado();
 int flecha (int teclaApretada, int posicion);
 
-//!-----------------------------------FUNCIONES MENU----------------------------------------------
-
-void dibujarLogo()
-{
-    char logo[735] = {0};
-    FILE * arch = fopen("logo.txt", "r");
-    if(arch)
-    {
-        printf(CYAN_T"");
-        fread(&logo,735,1,arch);
-        printf("%s \n", logo);
-    }
-    fclose(arch);
-    printf(RESET_COLOR"\n\n");
-}
-
-int menuAnimado()
-{
-    system ("cls");
-    int posicion = 1;
-    int teclaApretada = 0;
-
-    while(teclaApretada != 13)
-    {
-        system ("cls");
-
-        dibujarLogo();
-
-        if(posicion == 1)
-        {
-            printf(NEGRO_T BLANCO_F"Busqueda de un termino en algunos documentos\n"RESET_COLOR);
-        }
-        else
-        {
-            printf("Busqueda de un termino en algunos documentos\n");
-        }
-
-        if(posicion == 2)
-        {
-            printf(NEGRO_T BLANCO_F"Busqueda de un termino en todos los documentos\n"RESET_COLOR);
-        }
-        else
-        {
-            printf("Busqueda de un termino en todos los documentos\n");
-        }
-
-        if(posicion == 3)
-        {
-            printf(NEGRO_T BLANCO_F"Busqueda de varios terminos en un documento\n"RESET_COLOR);
-        }
-        else
-        {
-            printf("Busqueda de varios terminos en un documento\n");
-        }
-
-        if(posicion == 4)
-        {
-            printf(NEGRO_T BLANCO_F"Busqueda de una frase\n"RESET_COLOR);
-        }
-        else
-        {
-            printf("Busqueda de una frase\n");
-        }
-
-        if(posicion == 5){
-
-            printf(NEGRO_T BLANCO_F"Busqueda del termino mas frecuente en un documento \n"RESET_COLOR);
-
-        }else{
-
-            printf("Busqueda del termino mas frecuente en un documento\n");
-        }
-
-        if(posicion == 6){
-
-            printf(NEGRO_T BLANCO_F"Busqueda de un termino similar\n"RESET_COLOR);
-
-        }else{
-
-            printf("Busqueda de un termino similar\n");
-        }
-
-        if(posicion == 7){
-
-            printf(NEGRO_T BLANCO_F"Salir\n"RESET_COLOR);
-
-        }else{
-
-            printf("Salir\n");
-        }
-
-        teclaApretada = getch();
-
-        posicion = flecha(teclaApretada, posicion);
-    }
-
-    return posicion;
-}
-
-int flecha (int teclaApretada, int posicion)
-{
-    if(teclaApretada == 80 && posicion != 7)
-    {
-        posicion++;
-    }
-    else if(teclaApretada == 72 && posicion != 1)
-    {
-        posicion--;
-    }
-    else if(teclaApretada == 27)
-    {
-        menuAnimado();
-    }
-
-    return posicion;
-}
-
-
-/*
-void dibujarLogoAnimado()
-{
-
-    printf("");
-
-      ___           ___           ___           ___       ___
-     /  /\         /  /\         /  /\         /  /\     /  /\
-    /  /::\       /  /:/        /  /::\       /  /:/    /  /::\
-   /  /:/\:\     /  /:/        /  /:/\:\     /  /:/    /  /:/\:\
-  /  /:/  \:\   /  /:/        /  /:/  \:\   /  /:/    /  /::\ \:\
- /__/:/_\_ \:\ /__/:/     /\ /__/:/_\_ \:\ /__/:/    /__/:/\:\ \:\
- \  \:\__/\_\/ \  \:\    /:/ \  \:\__/\_\/ \  \:\    \  \:\ \:\_\/
-  \  \:\ \:\    \  \:\  /:/   \  \:\ \:\    \  \:\    \  \:\ \:\
-   \  \:\/:/     \  \:\/:/     \  \:\/:/     \  \:\    \  \:\_\/
-    \  \::/       \  \::/       \  \::/       \  \:\    \  \:\
-     \__\/         \__\/         \__\/         \__\/     \__\/
-}*/
-
-
+//!-----------------------------------     M A I N      ---------------------------------------------
 
 int main()
 {
@@ -349,4 +212,151 @@ int main()
     }
 
     return 0;
+}
+
+//!-----------------------------------FUNCIONES MENU----------------------------------------------
+
+void dibujarLogo()
+{
+    printf("                                                 ");
+    printf(VERDE_T",,  \n"RESET_COLOR);
+    printf(CYAN_T"  .g8'''bgd                                    "RESET_COLOR);
+    printf(VERDE_T"`7MM  \n"RESET_COLOR);
+    printf(CYAN_T".dP'     `M                                      "RESET_COLOR);
+    printf(VERDE_T"MM  \n"RESET_COLOR);
+
+    printf(CYAN_T"dM'       `  "RESET_COLOR);
+    printf(ROJO_T"`7MM  `7MM   "RESET_COLOR);
+    printf(AMARILLO_T".P'Ybmmm "RESET_COLOR);
+    printf(CYAN_T"`7MM  `7MM    "RESET_COLOR);
+    printf(VERDE_T"MM \n"RESET_COLOR);
+
+    printf(CYAN_T"MM             "RESET_COLOR);
+    printf(ROJO_T"MM    MM  "RESET_COLOR);
+    printf(AMARILLO_T":MI  I8     "RESET_COLOR);
+    printf(CYAN_T"MM    MM    "RESET_COLOR);
+    printf(VERDE_T"MM \n"RESET_COLOR);
+
+    printf(CYAN_T"MM.    `7MMF'  "RESET_COLOR);
+    printf(ROJO_T"MM    MM   "RESET_COLOR);
+    printf(AMARILLO_T"WmmmP'     "RESET_COLOR);
+    printf(CYAN_T"MM    MM    "RESET_COLOR);
+    printf(VERDE_T"MM  \n"RESET_COLOR);
+
+    printf(CYAN_T"`Mb.     MM    "RESET_COLOR);
+    printf(ROJO_T"MM    MM  "RESET_COLOR);
+    printf(AMARILLO_T"8M          "RESET_COLOR);
+    printf(CYAN_T"MM    MM    "RESET_COLOR);
+    printf(VERDE_T"MM \n"RESET_COLOR);
+
+
+    printf(CYAN_T"  `'bmmmdPY    "RESET_COLOR);
+    printf(ROJO_T"`Mbod'YML. "RESET_COLOR);
+    printf(AMARILLO_T"YMMMMMb    "RESET_COLOR);
+    printf(CYAN_T"`Mbod'YML."RESET_COLOR);
+    printf(VERDE_T".JMML.\n"RESET_COLOR);
+
+    printf(AMARILLO_T"                         6'     dP                   \n");
+    printf("                         Ybmmmd'                     \n\n"RESET_COLOR);
+}
+
+int menuAnimado()
+{
+    system ("cls");
+    int posicion = 1;
+    int teclaApretada = 0;
+
+    while(teclaApretada != 13)
+    {
+        system ("cls");
+
+        dibujarLogo();
+
+        if(posicion == 1)
+        {
+            printf(NEGRO_T BLANCO_F"Busqueda de un termino en algunos documentos\n"RESET_COLOR);
+        }
+        else
+        {
+            printf("Busqueda de un termino en algunos documentos\n");
+        }
+
+        if(posicion == 2)
+        {
+            printf(NEGRO_T BLANCO_F"Busqueda de un termino en todos los documentos\n"RESET_COLOR);
+        }
+        else
+        {
+            printf("Busqueda de un termino en todos los documentos\n");
+        }
+
+        if(posicion == 3)
+        {
+            printf(NEGRO_T BLANCO_F"Busqueda de varios terminos en un documento\n"RESET_COLOR);
+        }
+        else
+        {
+            printf("Busqueda de varios terminos en un documento\n");
+        }
+
+        if(posicion == 4)
+        {
+            printf(NEGRO_T BLANCO_F"Busqueda de una frase\n"RESET_COLOR);
+        }
+        else
+        {
+            printf("Busqueda de una frase\n");
+        }
+
+        if(posicion == 5){
+
+            printf(NEGRO_T BLANCO_F"Busqueda del termino mas frecuente en un documento \n"RESET_COLOR);
+
+        }else{
+
+            printf("Busqueda del termino mas frecuente en un documento\n");
+        }
+
+        if(posicion == 6){
+
+            printf(NEGRO_T BLANCO_F"Busqueda de un termino similar\n"RESET_COLOR);
+
+        }else{
+
+            printf("Busqueda de un termino similar\n");
+        }
+
+        if(posicion == 7){
+
+            printf(NEGRO_T BLANCO_F"Salir\n"RESET_COLOR);
+
+        }else{
+
+            printf("Salir\n");
+        }
+
+        teclaApretada = getch();
+
+        posicion = flecha(teclaApretada, posicion);
+    }
+
+    return posicion;
+}
+
+int flecha (int teclaApretada, int posicion)
+{
+    if(teclaApretada == 80 && posicion != 7)
+    {
+        posicion++;
+    }
+    else if(teclaApretada == 72 && posicion != 1)
+    {
+        posicion--;
+    }
+    else if(teclaApretada == 27)
+    {
+        menuAnimado();
+    }
+
+    return posicion;
 }

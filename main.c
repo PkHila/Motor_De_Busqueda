@@ -6,31 +6,155 @@
 #include "motorDeBusqueda.h"
 #include "funcionesUsuarios.h"
 
+#define RESET_COLOR   "\x1b[0m"
+#define NEGRO_T       "\x1b[30m"
+#define NEGRO_F       "\x1b[40m"
+#define ROJO_T        "\x1b[31m"
+#define ROJO_F        "\x1b[41m"
+#define VERDE_T       "\x1b[32m"
+#define VERDE_F       "\x1b[42m"
+#define AMARILLO_T    "\x1b[33m"
+#define AMARILLO_F    "\x1b[43m"
+#define AZUL_T        "\x1b[34m"
+#define AZUL_F        "\x1b[44m"
+#define MAGENTA_T     "\x1b[35m"
+#define MAGENTA_F     "\x1b[45m"
+#define CYAN_T        "\x1b[36m"
+#define CYAN_F        "\x1b[46m"
+#define BLANCO_T      "\x1b[37m"
+#define BLANCO_F      "\x1b[47m"
+
+int flecha (int teclaApretada, int posicion) //
+{
+    if(teclaApretada == 80 && posicion != 7)
+    {
+        posicion++;
+    }
+    else if(teclaApretada == 72 && posicion != 1)
+    {
+        posicion--;
+    }
+    else if(teclaApretada == 27)
+    {
+        menuAnimado();
+    }
+
+    return posicion;
+}
+
 void dibujarLogo()
 {
     char logo[735] = {0};
     FILE * arch = fopen("logo.txt", "r");
     if(arch)
     {
+        printf(CYAN_T"");
         fread(&logo,735,1,arch);
         printf("%s \n", logo);
     }
     fclose(arch);
+    printf(RESET_COLOR"\n\n");
 }
 
-void menu()
+void dibujarLogoAnimado()
 {
-    dibujarLogo();
 
-    printf("\n1. Busqueda de un termino en algunos documentos");
-    printf("\n2. Busqueda de un termino en todos los documentos");
-    printf("\n3. Busqueda de varios terminos en un documento");
-    printf("\n4. Busqueda de una frase");
-    printf("\n5. Busqueda del termino mas frecuente en un documento");
-    printf("\n6. Busqueda de un termino similar");
-    printf("\n0. Salir");
+    printf("");
 
-    printf("\n\nIngrese su opcion: ");
+      ___           ___           ___           ___       ___
+     /  /\         /  /\         /  /\         /  /\     /  /\
+    /  /::\       /  /:/        /  /::\       /  /:/    /  /::\
+   /  /:/\:\     /  /:/        /  /:/\:\     /  /:/    /  /:/\:\
+  /  /:/  \:\   /  /:/        /  /:/  \:\   /  /:/    /  /::\ \:\
+ /__/:/_\_ \:\ /__/:/     /\ /__/:/_\_ \:\ /__/:/    /__/:/\:\ \:\
+ \  \:\__/\_\/ \  \:\    /:/ \  \:\__/\_\/ \  \:\    \  \:\ \:\_\/
+  \  \:\ \:\    \  \:\  /:/   \  \:\ \:\    \  \:\    \  \:\ \:\
+   \  \:\/:/     \  \:\/:/     \  \:\/:/     \  \:\    \  \:\_\/
+    \  \::/       \  \::/       \  \::/       \  \:\    \  \:\
+     \__\/         \__\/         \__\/         \__\/     \__\/
+}
+
+int menuAnimado()
+{
+    system ("cls");
+    int posicion = 1;
+    int teclaApretada = 0;
+
+    while(teclaApretada != 13)
+    {
+        system ("cls");
+
+        dibujarLogo();
+
+        if(posicion == 1)
+        {
+            printf(NEGRO_T BLANCO_F"Busqueda de un termino en algunos documentos\n"RESET_COLOR);
+        }
+        else
+        {
+            printf("Busqueda de un termino en algunos documentos\n");
+        }
+
+        if(posicion == 2)
+        {
+            printf(NEGRO_T BLANCO_F"Busqueda de un termino en todos los documentos\n"RESET_COLOR);
+        }
+        else
+        {
+            printf("Busqueda de un termino en todos los documentos\n");
+        }
+
+        if(posicion == 3)
+        {
+            printf(NEGRO_T BLANCO_F"Busqueda de varios terminos en un documento\n"RESET_COLOR);
+        }
+        else
+        {
+            printf("Busqueda de varios terminos en un documento\n");
+        }
+
+        if(posicion == 4)
+        {
+            printf(NEGRO_T BLANCO_F"Busqueda de una frase\n"RESET_COLOR);
+        }
+        else
+        {
+            printf("Busqueda de una frase\n");
+        }
+
+        if(posicion == 5){
+
+            printf(NEGRO_T BLANCO_F"Busqueda del termino mas frecuente en un documento \n"RESET_COLOR);
+
+        }else{
+
+            printf("Busqueda del termino mas frecuente en un documento\n");
+        }
+
+        if(posicion == 6){
+
+            printf(NEGRO_T BLANCO_F"Busqueda de un termino similar\n"RESET_COLOR);
+
+        }else{
+
+            printf("Busqueda de un termino similar\n");
+        }
+
+        if(posicion == 7){
+
+            printf(NEGRO_T BLANCO_F"Salir\n"RESET_COLOR);
+
+        }else{
+
+            printf("Salir\n");
+        }
+
+        teclaApretada = getch();
+
+        posicion = flecha(teclaApretada, posicion);
+    }
+
+    return posicion;
 }
 
 int main()
@@ -45,7 +169,7 @@ int main()
     cargarArbol(&arbol);
 
     //MENU
-    while(comando!=0)
+    while(comando!=7)
     {
         //!opcion 1
         nodoT* apariciones=NULL;
@@ -68,22 +192,16 @@ int main()
         //ayuda  a mostrar los docs
         int docAnt=0;
 
-        menu();
-        fflush(stdin);
-        scanf("%i",&comando);
-
+        comando=menuAnimado();
         system("cls");
 
         switch(comando)
         {
-        case 0:
-            break;
-
         case 1:
 
-            printf("\t ---------------------------------------------\n");
+            printf(CYAN_T"\t ---------------------------------------------\n");
             printf("\t|             BUSQUEDA EN ALGUNOS             |\n");
-            printf("\t ---------------------------------------------\n");
+            printf("\t ---------------------------------------------\n"RESET_COLOR);
 
             verificacion=cargarPalabra(arbol,palabra);
 
@@ -100,9 +218,9 @@ int main()
 
         case 2:
 
-            printf("\t ---------------------------------------------\n");
+            printf(CYAN_T"\t ---------------------------------------------\n");
             printf("\t|              BUSQUEDA EN TODOS              |\n");
-            printf("\t ---------------------------------------------\n");
+            printf("\t ---------------------------------------------\n"RESET_COLOR);
 
             verificacion=cargarIds(&listaId);
 
@@ -133,9 +251,9 @@ int main()
             break;
 
         case 3:
-            printf("\t ---------------------------------------------\n");
+            printf(CYAN_T"\t ---------------------------------------------\n");
             printf("\t|   BUSQUEDA VARIOS TERMINOS EN X DOCUMENTO   |\n");
-            printf("\t ---------------------------------------------\n");
+            printf("\t ---------------------------------------------\n"RESET_COLOR);
 
             cargarPalabras(arbol,&palabras,&noEncontradas);
 
@@ -154,18 +272,18 @@ int main()
             break;
 
         case 4:
-            printf("\t ---------------------------------------------\n");
+            printf(CYAN_T"\t ---------------------------------------------\n");
             printf("\t|         BUSQUEDA DE FRASE COMPLETA          |\n");
-            printf("\t ---------------------------------------------\n");
+            printf("\t ---------------------------------------------\n"RESET_COLOR);
 
             buscarFrase(arbol, &apariciones);
 
             break;
 
         case 5:
-            printf("\t ---------------------------------------------\n");
+            printf(CYAN_T"\t ---------------------------------------------\n");
             printf("\t|   BUSQUEDA TERMINO MAS FRECUENTE EN X DOC   |\n");
-            printf("\t ---------------------------------------------\n");
+            printf("\t ---------------------------------------------\n"RESET_COLOR);
 
             verificacion=ingresoIdDoc(&id);
 
@@ -182,9 +300,9 @@ int main()
 
         case 6:
 
-            printf("\t ---------------------------------------------\n");
+            printf(CYAN_T"\t ---------------------------------------------\n");
             printf("\t|             TERMINOS SIMILARES              |\n");
-            printf("\t ---------------------------------------------\n");
+            printf("\t ---------------------------------------------\n"RESET_COLOR);
 
             verificacion=cargarPalabra(arbol,palabra);
 
@@ -196,6 +314,10 @@ int main()
             {
                 sugerirSimilares(arbol,palabra);
             }
+
+            break;
+
+        default:
 
             break;
         }

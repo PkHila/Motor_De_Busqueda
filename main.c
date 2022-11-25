@@ -141,7 +141,7 @@ int main()
 
             if(verificacion)
             {
-                buscarVariasAparicionesEnXDoc(arbol,palabras,id,&apariciones);
+                buscarVariasAparicionesEnXDoc(arbol,palabras,id,&apariciones,&noEncontradas);
                 mostrarPalabrasNoEncontradas(noEncontradas);
             }
             else

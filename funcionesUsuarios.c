@@ -296,7 +296,7 @@ int buscarAparicionesEnTodosDocs(nodoA* arbol,char palabra[],nodoId* idBuscado,n
 
 /// 3)Buscar la aparicion de mas de un termino en el mismo documento.
 
-void buscarVariasAparicionesEnXDoc(nodoA* arbol,nodoPalabra* palabras,int id,nodoT** ocurrencias)
+void buscarVariasAparicionesEnXDoc(nodoA* arbol,nodoPalabra* palabras,int id,nodoT** ocurrencias,nodoPalabra** noEncontradas)
 {
     int coincide=0;
     nodoA* palabraEncontrada;
@@ -308,6 +308,11 @@ void buscarVariasAparicionesEnXDoc(nodoA* arbol,nodoPalabra* palabras,int id,nod
 
         //si coincide el id la carga en la lista de ocurrencias
         coincide=coincideId(palabraEncontrada->ocurrencias,id,ocurrencias);
+
+        if(!coincide){
+
+            insertarPalabra(noEncontradas,palabras->palabra);
+        }
 
         palabras=palabras->sig;
     }
@@ -510,6 +515,8 @@ void buscarPalabraMasFrecuente(nodoA* arbol,int id,nodoT** apariciones)
 
     //aplica un filtro, guarda las que estan en ese id
     coincide=coincideId(palabraEncontrada->ocurrencias,id,apariciones);
+
+    printf("\nTotal de apariciones: %d\n",maxApariciones);
 }
 
 /// 6. Utilizar la distancia de levenshtein en el ingreso de una palabra y sugerir similares a partir de una distancia <= 3.
@@ -578,7 +585,7 @@ void mostrarPalabrasNoEncontradas(nodoPalabra* lista)
 {
     if(lista)
     {
-        printf("\n\t     Palabras no encontradas en ningun documento\n");
+        printf("\n\t\t     Palabras no encontradas  \n");
         printf("______________________________________________________________________\n\n");
 
         while(lista)

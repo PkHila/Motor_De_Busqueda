@@ -374,7 +374,10 @@ void buscarPalabrasContinuas(nodoT** arreglo,int validos, nodoT** apariciones)
                         }
                         else //sino significa que la comparacion fue exitosa
                         {
-                            insertarNuevaOcurrencia(apariciones,arreglo[0]->idDOC, arreglo[0]->pos);
+                            for(int j = 0; j < validos; j++)
+                            {
+                                insertarNuevaOcurrencia(apariciones,arreglo[j]->idDOC, arreglo[j]->pos);
+                            }
                             arreglo[0] = arreglo[0]->sig; //no comparo mas con esta ocurrencia
                             i = 1; //reinicio el indice para la siguiente comparacion
                         }

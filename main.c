@@ -1,10 +1,14 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <conio.h>
 
 #include "diccionario.h"
 #include "motorDeBusqueda.h"
 #include "funcionesUsuarios.h"
+
+
+//!-----------------------------------COLORES DE CONSOLA----------------------------------------------
 
 #define RESET_COLOR   "\x1b[0m"
 #define NEGRO_T       "\x1b[30m"
@@ -24,23 +28,14 @@
 #define BLANCO_T      "\x1b[37m"
 #define BLANCO_F      "\x1b[47m"
 
-int flecha (int teclaApretada, int posicion) //
-{
-    if(teclaApretada == 80 && posicion != 7)
-    {
-        posicion++;
-    }
-    else if(teclaApretada == 72 && posicion != 1)
-    {
-        posicion--;
-    }
-    else if(teclaApretada == 27)
-    {
-        menuAnimado();
-    }
 
-    return posicion;
-}
+//!-----------------------------------PROTOTIPOS MENU----------------------------------------------
+
+void dibujarLogo();
+int menuAnimado();
+int flecha (int teclaApretada, int posicion);
+
+//!-----------------------------------FUNCIONES MENU----------------------------------------------
 
 void dibujarLogo()
 {
@@ -54,24 +49,6 @@ void dibujarLogo()
     }
     fclose(arch);
     printf(RESET_COLOR"\n\n");
-}
-
-void dibujarLogoAnimado()
-{
-
-    printf("");
-
-      ___           ___           ___           ___       ___
-     /  /\         /  /\         /  /\         /  /\     /  /\
-    /  /::\       /  /:/        /  /::\       /  /:/    /  /::\
-   /  /:/\:\     /  /:/        /  /:/\:\     /  /:/    /  /:/\:\
-  /  /:/  \:\   /  /:/        /  /:/  \:\   /  /:/    /  /::\ \:\
- /__/:/_\_ \:\ /__/:/     /\ /__/:/_\_ \:\ /__/:/    /__/:/\:\ \:\
- \  \:\__/\_\/ \  \:\    /:/ \  \:\__/\_\/ \  \:\    \  \:\ \:\_\/
-  \  \:\ \:\    \  \:\  /:/   \  \:\ \:\    \  \:\    \  \:\ \:\
-   \  \:\/:/     \  \:\/:/     \  \:\/:/     \  \:\    \  \:\_\/
-    \  \::/       \  \::/       \  \::/       \  \:\    \  \:\
-     \__\/         \__\/         \__\/         \__\/     \__\/
 }
 
 int menuAnimado()
@@ -156,6 +133,46 @@ int menuAnimado()
 
     return posicion;
 }
+
+int flecha (int teclaApretada, int posicion)
+{
+    if(teclaApretada == 80 && posicion != 7)
+    {
+        posicion++;
+    }
+    else if(teclaApretada == 72 && posicion != 1)
+    {
+        posicion--;
+    }
+    else if(teclaApretada == 27)
+    {
+        menuAnimado();
+    }
+
+    return posicion;
+}
+
+
+/*
+void dibujarLogoAnimado()
+{
+
+    printf("");
+
+      ___           ___           ___           ___       ___
+     /  /\         /  /\         /  /\         /  /\     /  /\
+    /  /::\       /  /:/        /  /::\       /  /:/    /  /::\
+   /  /:/\:\     /  /:/        /  /:/\:\     /  /:/    /  /:/\:\
+  /  /:/  \:\   /  /:/        /  /:/  \:\   /  /:/    /  /::\ \:\
+ /__/:/_\_ \:\ /__/:/     /\ /__/:/_\_ \:\ /__/:/    /__/:/\:\ \:\
+ \  \:\__/\_\/ \  \:\    /:/ \  \:\__/\_\/ \  \:\    \  \:\ \:\_\/
+  \  \:\ \:\    \  \:\  /:/   \  \:\ \:\    \  \:\    \  \:\ \:\
+   \  \:\/:/     \  \:\/:/     \  \:\/:/     \  \:\    \  \:\_\/
+    \  \::/       \  \::/       \  \::/       \  \:\    \  \:\
+     \__\/         \__\/         \__\/         \__\/     \__\/
+}*/
+
+
 
 int main()
 {
@@ -323,7 +340,11 @@ int main()
         }
 
         mostrarDocumento(apariciones,&docAnt);
-        system("pause");
+
+        if(comando!=7)
+        {
+            system("pause");
+        }
         system("cls");
     }
 

@@ -42,7 +42,7 @@ void buscarPalabrasContinuas(nodoT** arreglo,int validos, nodoT** apariciones);
 void buscarFrase(nodoA* arbol, nodoT** apariciones);
 int Minimo(int a, int b);
 int Levenshtein(char *s1,char *s2);
-void sugerirSimilares(nodoA* arbol,char palabra[]);
+void sugerirSimilares(nodoA* arbol,char palabra[], int minDistancia, nodoA** minimaPalabra);
 void mostrarPalabrasNoEncontradas(nodoPalabra* noEncontradas);
 int mostrarPalabra(Termino temp,nodoT* lista,int avisoImpresion);
 void mostrarDocumento(nodoT* lista,int* docAnt);

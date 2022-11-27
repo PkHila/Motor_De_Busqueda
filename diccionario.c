@@ -74,7 +74,7 @@ void separarPalabras(char* textoCompleto, int idDocumento)
 char* generarNombreArchivo(int idDocumento) //crea el nombre del archivo en base a el id de documento
 {
     char *nombreArch = (char*) calloc(20, sizeof(char));
-    char idString[2];
+    char idString[3] = {0};
     char cabecera[20] = "texto";
     char* extension = ".txt";
     sprintf(idString, "%i", idDocumento); //convierte el entero en string para ser concatenado

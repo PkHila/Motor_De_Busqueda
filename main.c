@@ -68,7 +68,8 @@ int main()
         //!opcion 5
         //int id=0;
         //!opcion 6
-
+        nodoA* sugerencia = NULL;
+        char respuesta = 'n';
         //ayuda  a mostrar los docs
         int docAnt=0;
 
@@ -192,7 +193,23 @@ int main()
             }
             else
             {
-                sugerirSimilares(arbol,palabra);
+                sugerirSimilares(arbol,palabra,4,&sugerencia);
+                if(sugerencia)
+                {
+                    printf("Quizas quisiste decir \"%s\"\n", sugerencia->palabra);
+                    printf("Te gustaria buscar esa palabra? s/n\n");
+                    fflush(stdin);
+                    scanf("%c", &respuesta);
+                    if(respuesta =='s')
+                    {
+                        buscarAparicionesEnAlgunosDocs(arbol,sugerencia->palabra,&apariciones);
+                    }
+                }
+                else
+                {
+                    printf("No se encontro una palabra lo suficientemente cercana.\n");
+                }
+
             }
 
             break;

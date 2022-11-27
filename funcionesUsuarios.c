@@ -564,18 +564,31 @@ int Levenshtein(char *s1,char *s2)
     return(res);
 }
 
-void sugerirSimilares(nodoA* arbol,char palabra[])
+void sugerirSimilares(nodoA* arbol,char palabra[], int minDistancia, nodoA** minimaPalabra)
 {
-    if(arbol){
+    if(arbol)
+    {
 
-        int dist =Levenshtein(arbol->palabra,palabra);
+        int dist = Levenshtein(arbol->palabra,palabra);
 
-        if(dist <= 3){
-            printf("\n- %s",arbol->palabra);
+        if(dist <= 3 && dist < minDistancia)
+        {
+            minDistancia = dist;
+            *minimaPalabra = arbol;
+            printf("%s\n", (*minimaPalabra)->palabra);
+
+        }
+        else if(dist == minDistancia)
+        {
+            if(*minimaPalabra!=NULL && arbol->frecuencia > (*minimaPalabra)->frecuencia)
+            {
+                *minimaPalabra = arbol;
+                printf("%s\n", (*minimaPalabra)->palabra);
+            }
         }
 
-        sugerirSimilares(arbol->izq,palabra);
-        sugerirSimilares(arbol->der,palabra);
+        sugerirSimilares(arbol->izq,palabra,minDistancia,minimaPalabra);
+        sugerirSimilares(arbol->der,palabra,minDistancia,minimaPalabra);
     }
 }
 
